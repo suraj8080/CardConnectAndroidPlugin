@@ -1,0 +1,14 @@
+{
+  "name": "cordova-plugin-cardconnectplugin",
+  "version": "0.1.1",
+  "description": "plugin for connecting card connect sdk",
+  "cordova": {
+    "id": "cordova-plugin-cardconnectplugin",
+    "platforms": []
+  },
+  "keywords": [
+    "ecosystem:cordova"
+  ],
+  "author": "",
+  "license": "ISC"
+}
