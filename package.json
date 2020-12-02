@@ -1,20 +1,23 @@
 {
   "name": "cordova-plugin-cardconnectplugin",
   "version": "0.1.1",
-  "description": "plugin for connecting card connect sdk",
+  "description": "plugin to connect card connect sdk",
   "cordova": {
     "id": "cordova-plugin-cardconnectplugin",
-    "platforms": []
+    "platforms": [
+      "android"
+    ]
   },
-  "keywords": [
-    "ecosystem:cordova"
-  ],
-  "author": "Evontech",
-  "license": "ISC",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/suraj8080/CardConnectAndroidPlugin.git"
   },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "author": "EvonTech",
+  "license": "ISC",
   "bugs": {
     "url": "https://github.com/suraj8080/CardConnectAndroidPlugin/issues"
   },
