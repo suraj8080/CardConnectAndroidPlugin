@@ -1,4 +1,4 @@
-package com.example.cardconnectdemo;
+package cordova.plugin.cardconnectplugin.cardconnectplugin;
 
 import android.content.Context;
 import android.os.Handler;
@@ -15,13 +15,14 @@ import com.bolt.consumersdk.swiper.enums.BatteryState;
 import com.bolt.consumersdk.swiper.enums.SwiperCaptureMode;
 import com.bolt.consumersdk.swiper.enums.SwiperError;
 import com.bolt.consumersdk.swiper.enums.SwiperType;
+import com.evontech.cardconnect.R;
 
 import static com.bolt.consumersdk.swiper.enums.SwiperType.BBPosDevice;
 import static com.bolt.consumersdk.swiper.enums.SwiperType.IDTech;
 
 public class SwiperControllerManager {
-    public static String TAG = com.example.cardconnectdemo.SwiperControllerManager.class.getSimpleName();
-    private static final com.example.cardconnectdemo.SwiperControllerManager mInstance = new com.example.cardconnectdemo.SwiperControllerManager();
+    public static String TAG = cordova.plugin.cardconnectplugin.cardconnectplugin.SwiperControllerManager.class.getSimpleName();
+    private static final cordova.plugin.cardconnectplugin.cardconnectplugin.SwiperControllerManager mInstance = new cordova.plugin.cardconnectplugin.cardconnectplugin.SwiperControllerManager();
     private String mDeviceMACAddress = null;
     private SwiperController mSwiperController;
     private SwiperControllerListener mSwiperControllerListener = null;
@@ -30,7 +31,7 @@ public class SwiperControllerManager {
     private Context mContext = null;
     private boolean bConnected = false;
 
-    public static com.example.cardconnectdemo.SwiperControllerManager getInstance() {
+    public static cordova.plugin.cardconnectplugin.cardconnectplugin.SwiperControllerManager getInstance() {
         return mInstance;
     }
 
@@ -293,14 +294,14 @@ public class SwiperControllerManager {
      * Initial Configuration for Consumer Api
      */
     private void setupConsumerApi() {
-        switch (com.example.cardconnectdemo.SwiperControllerManager.getInstance().getSwiperType()) {
+        switch (cordova.plugin.cardconnectplugin.cardconnectplugin.SwiperControllerManager.getInstance().getSwiperType()) {
             case BBPosDevice:
                 //CCConsumer.getInstance().getApi().setEndPoint("https://fts-uat.cardconnect.com");
                 //CCConsumer.getInstance().getApi().setEndPoint(mContext.getString(R.string.cardconnect_prod_post_url));
-                CCConsumer.getInstance().getApi().setEndPoint(mContext.getString(R.string.cardconnect_uat_post_url));
+             //   CCConsumer.getInstance().getApi().setEndPoint(mContext.getString(R.string.cardconnect_uat_post_url));
                 break;
             case IDTech:
-                CCConsumer.getInstance().getApi().setEndPoint(mContext.getString(R.string.cardconnect_uat_post_url));
+              //  CCConsumer.getInstance().getApi().setEndPoint(mContext.getString(R.string.cardconnect_uat_post_url));
                 //CCConsumer.getInstance().getApi().setEndPoint(mContext.getString(R.string.cardconnect_prod_post_url));
                 //CCConsumer.getInstance().getApi().setEndPoint(mContext.getString(R.string.cardconnect_qa_post_url));
                 break;
@@ -308,3 +309,4 @@ public class SwiperControllerManager {
         CCConsumer.getInstance().getApi().setDebugEnabled(true);
     }
 }
+

@@ -11,11 +11,11 @@
 
 <source-file src="src/android/cardconnectplugin.java" target-dir="src/cordova/plugin/cardconnectplugin/cardconnectplugin" />
 
-<source-file src="src/android/SwiperControllerManager.java"/>
+<source-file src="src/android/SwiperControllerManager.java" target-dir="src/cordova/plugin/cardconnectplugin/cardconnectplugin"/>
 
-<source-file src="src/android/MainApp.java"/>
+<source-file src="src/android/MainApp.java" target-dir="src/cordova/plugin/cardconnectplugin/cardconnectplugin"/>
 
-<source-file src="src/android/colors.xml"/>
+
 
 <framework src="src/android/myplugin.gradle" custom="true" type="gradleReference"/>
 <lib-file src="src/android/boltsdk-release.aar"/>

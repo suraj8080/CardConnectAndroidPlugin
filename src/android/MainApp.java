@@ -1,4 +1,4 @@
-package com.example.cardconnectdemo;
+package cordova.plugin.cardconnectplugin.cardconnectplugin;
 
 import android.app.Application;
 
@@ -8,21 +8,21 @@ import com.bolt.consumersdk.swiper.enums.SwiperType;
 
 public class MainApp extends Application {
 
-    private static String TAG = com.example.cardconnectdemo.MainApp.class.getSimpleName();
-    private static com.example.cardconnectdemo.MainApp sAppContext;
+    private static String TAG = cordova.plugin.cardconnectplugin.cardconnectplugin.MainApp.class.getSimpleName();
+    private static cordova.plugin.cardconnectplugin.cardconnectplugin.MainApp sAppContext;
 
     public static CCConsumerApi getConsumerApi() {
         return CCConsumer.getInstance().getApi();
     }
 
-    public static com.example.cardconnectdemo.MainApp getInstance() {
+    public static cordova.plugin.cardconnectplugin.cardconnectplugin.MainApp getInstance() {
         return sAppContext;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        sAppContext = (com.example.cardconnectdemo.MainApp) getApplicationContext();
+        sAppContext = (cordova.plugin.cardconnectplugin.cardconnectplugin.MainApp) getApplicationContext();
 
         SwiperControllerManager.getInstance().setContext(sAppContext);
         SwiperControllerManager.getInstance().setSwiperType(SwiperType.BBPosDevice);
@@ -36,3 +36,4 @@ public class MainApp extends Application {
 
 
 }
+

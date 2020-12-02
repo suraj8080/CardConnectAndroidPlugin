@@ -1,5 +1,7 @@
 package cordova.plugin.cardconnectplugin.cardconnectplugin;
 
+import android.util.Log;
+
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CallbackContext;
 
@@ -26,17 +28,17 @@ public class cardconnectplugin extends CordovaPlugin {
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         if (action.equals("actionInitlisePayment")) {
-            	String cardNumber = args.getString(0);
-		String tokeniseUrl = args.getString(1)
+            String cardNumber = args.getString(0);
+		    String tokensiseUrl = args.getString(1);
 	        String amount = args.getString(2);
 	        String response = "Token for card number is "+cardNumber;
-            	generateToken(tokensiseUrl, cardNumber, amount);
+            generateToken(callbackContext,tokensiseUrl, cardNumber, amount);
             return true;
         }
         return false;
     }
 
-    public void generateToken(String tokeniseUrl, String cardNumber, String amount){
+    public void generateToken(CallbackContext callbackContext, String tokeniseUrl, String cardNumber, String amount){
         SwiperControllerManager.getInstance().setSwiperControllerListener(mSwiperControllerListener);
         mCCConsumerCardInfo = new CCConsumerCardInfo();
         mCCConsumerCardInfo.setCardNumber(cardNumber);
@@ -50,7 +52,7 @@ public class cardconnectplugin extends CordovaPlugin {
             public void onCCConsumerTokenResponseError(CCConsumerError error) {
                 errorMessage = error.getResponseMessage();
                 Log.d("accountToken ", errorMessage);
-		this.responseInitlisePayment("Error in Generate token "+errorMessage, callbackContext);
+		  responseInitlisePayment("Error in Generate token "+errorMessage, callbackContext);
             }
 
             @Override
@@ -58,7 +60,7 @@ public class cardconnectplugin extends CordovaPlugin {
                 //dismissProgressDialog();
                 accountToken = consumerAccount.getToken();
                 Log.d("accountToken ", accountToken);
-		this.responseInitlisePayment("Account token is "+accountToken, callbackContext);
+		    responseInitlisePayment("Account token is "+accountToken, callbackContext);
 		
             }
         });
@@ -72,4 +74,5 @@ public class cardconnectplugin extends CordovaPlugin {
         }
     }
 }
+
 
