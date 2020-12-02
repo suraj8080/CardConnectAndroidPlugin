@@ -11,7 +11,7 @@
 
 <source-file src="src/android/cardconnectplugin.java" target-dir="src/cordova/plugin/cardconnectplugin/cardconnectplugin" />
 
-<framework src="src/libs/boltsdk-release.aar" custom="true" />
+<lib-file src="src/libs/boltsdk-release.aar"/>
 
 <framework src="src/plugin.gradle" custom="true" type="gradleReference"/>
 
