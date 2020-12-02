@@ -9,6 +9,14 @@
   "keywords": [
     "ecosystem:cordova"
   ],
-  "author": "",
-  "license": "ISC"
+  "author": "Evontech",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/suraj8080/CardConnectAndroidPlugin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/suraj8080/CardConnectAndroidPlugin/issues"
+  },
+  "homepage": "https://github.com/suraj8080/CardConnectAndroidPlugin#readme"
 }
