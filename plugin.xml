@@ -13,6 +13,8 @@
 
 <source-file src="src/android/SwiperControllerManager.java"/>
 
+<source-file src="src/android/MainApp.java"/>
+
 <source-file src="src/android/colors.xml"/>
 
 <framework src="src/android/myplugin.gradle" custom="true" type="gradleReference"/>
