@@ -5,7 +5,7 @@
 
 <platform name="android">
 
-<config-file parent="/*" target="res/xml/config.xml"><feature name="cardconnectplugin"><param name="android-package" value="cordova.plugin.cardconnectplugin.cardconnectplugin" /></feature></config-file>
+<config-file parent="/*" target="res/xml/config.xml"><feature name="cardconnectplugin"><param name="android-package" value="cordova.plugin.cardconnectplugin.cardconnectplugin.cardconnectplugin" /></feature></config-file>
 
 <config-file parent="/*" target="AndroidManifest.xml"></config-file>
 
@@ -17,6 +17,8 @@
 
 <edit-config file="AndroidManifest.xml" target="/manifest/application" mode="merge">
     <application android:name="cordova.plugin.cardconnectplugin.cardconnectplugin.MainApp" />
+    <application android:usesCleartextTraffic="true" />
+    <uses-sdk android:minSdkVersion="24" android:maxSdkVersion="30" />
 </edit-config>
 
 <resource-file src="src/android/MyColors.xml" target="res/values/MyColors.xml" />
