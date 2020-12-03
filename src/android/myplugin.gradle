@@ -7,6 +7,8 @@ repositories{
 
 dependencies {
     compile(name:'boltsdk-release', ext:'aar')
+    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
 }
 
 android {

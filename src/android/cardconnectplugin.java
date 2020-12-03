@@ -2,6 +2,7 @@ package cordova.plugin.cardconnectplugin.cardconnectplugin;
 
 import android.util.Log;
 
+import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CallbackContext;
 
@@ -28,11 +29,16 @@ public class cardconnectplugin extends CordovaPlugin {
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         if (action.equals("actionInitlisePayment")) {
-            String cardNumber = args.getString(0);
-		    String tokensiseUrl = args.getString(1);
+            String tokensiseUrl = args.getString(0);
+		    String  cardNumber = args.getString(1);
 	        String amount = args.getString(2);
 	        String response = "Token for card number is "+cardNumber;
-            generateToken(callbackContext,tokensiseUrl, cardNumber, amount);
+            cordova.getThreadPool().execute(new Runnable() {
+                @Override
+                public void run() {
+                    generateToken(callbackContext,tokensiseUrl, cardNumber, amount);
+                }
+            });
             return true;
         }
         return false;
@@ -74,5 +80,6 @@ public class cardconnectplugin extends CordovaPlugin {
         }
     }
 }
+
 
 

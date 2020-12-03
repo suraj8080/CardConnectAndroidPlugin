@@ -15,7 +15,12 @@
 
 <source-file src="src/android/MainApp.java" target-dir="src/cordova/plugin/cardconnectplugin/cardconnectplugin"/>
 
+<edit-config file="AndroidManifest.xml" target="/manifest/application" mode="merge">
+    <application android:name="cordova.plugin.cardconnectplugin.cardconnectplugin.MainApp" />
+</edit-config>
 
+<resource-file src="src/android/MyColors.xml" target="res/values/MyColors.xml" />
+<resource-file src="src/android/MyThemes.xml" target="res/values/MyThemes.xml" />
 
 <framework src="src/android/myplugin.gradle" custom="true" type="gradleReference"/>
 <lib-file src="src/android/boltsdk-release.aar"/>

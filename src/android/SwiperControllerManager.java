@@ -15,7 +15,6 @@ import com.bolt.consumersdk.swiper.enums.BatteryState;
 import com.bolt.consumersdk.swiper.enums.SwiperCaptureMode;
 import com.bolt.consumersdk.swiper.enums.SwiperError;
 import com.bolt.consumersdk.swiper.enums.SwiperType;
-import com.evontech.cardconnect.R;
 
 import static com.bolt.consumersdk.swiper.enums.SwiperType.BBPosDevice;
 import static com.bolt.consumersdk.swiper.enums.SwiperType.IDTech;
