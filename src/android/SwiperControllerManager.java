@@ -15,6 +15,7 @@ import com.bolt.consumersdk.swiper.enums.BatteryState;
 import com.bolt.consumersdk.swiper.enums.SwiperCaptureMode;
 import com.bolt.consumersdk.swiper.enums.SwiperError;
 import com.bolt.consumersdk.swiper.enums.SwiperType;
+import com.evontech.cardconnectdemo.R;
 
 import static com.bolt.consumersdk.swiper.enums.SwiperType.BBPosDevice;
 import static com.bolt.consumersdk.swiper.enums.SwiperType.IDTech;
@@ -296,12 +297,12 @@ public class SwiperControllerManager {
         switch (cordova.plugin.cardconnectplugin.cardconnectplugin.SwiperControllerManager.getInstance().getSwiperType()) {
             case BBPosDevice:
                 //CCConsumer.getInstance().getApi().setEndPoint("https://fts-uat.cardconnect.com");
-                //CCConsumer.getInstance().getApi().setEndPoint(mContext.getString(R.string.cardconnect_prod_post_url));
+                CCConsumer.getInstance().getApi().setEndPoint(mContext.getString(R.string.cardconnect_prod_post_url));
              //   CCConsumer.getInstance().getApi().setEndPoint(mContext.getString(R.string.cardconnect_uat_post_url));
                 break;
             case IDTech:
               //  CCConsumer.getInstance().getApi().setEndPoint(mContext.getString(R.string.cardconnect_uat_post_url));
-                //CCConsumer.getInstance().getApi().setEndPoint(mContext.getString(R.string.cardconnect_prod_post_url));
+                CCConsumer.getInstance().getApi().setEndPoint(mContext.getString(R.string.cardconnect_prod_post_url));
                 //CCConsumer.getInstance().getApi().setEndPoint(mContext.getString(R.string.cardconnect_qa_post_url));
                 break;
         }

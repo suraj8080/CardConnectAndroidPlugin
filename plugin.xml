@@ -15,15 +15,62 @@
 
 <source-file src="src/android/MainApp.java" target-dir="src/cordova/plugin/cardconnectplugin/cardconnectplugin"/>
 
+<source-file src="src/android/ApiBridgeImpl.java" target-dir="src/cordova/plugin/cardconnectplugin/cardconnectplugin"/>
+
+<source-file src="src/android/BaseActivity.java" target-dir="src/cordova/plugin/cardconnectplugin/cardconnectplugin"/>
+
+<source-file src="src/android/BaseFragment.java" target-dir="src/cordova/plugin/cardconnectplugin/cardconnectplugin"/>
+
+<source-file src="src/android/CustomFlowActivity.java" target-dir="src/cordova/plugin/cardconnectplugin/cardconnectplugin"/>
+
+<source-file src="src/android/GsonUtils.java" target-dir="src/cordova/plugin/cardconnectplugin/cardconnectplugin"/>
+
+<source-file src="src/android/MainActivity.java" target-dir="src/cordova/plugin/cardconnectplugin/cardconnectplugin"/>
+
+<source-file src="src/android/SharedPreferenceHelper.java" target-dir="src/cordova/plugin/cardconnectplugin/cardconnectplugin"/>
+
+<source-file src="src/android/SpinningDialogFragment.java" target-dir="src/cordova/plugin/cardconnectplugin/cardconnectplugin"/>
+
+<source-file src="src/android/SwiperTestActivity.java" target-dir="src/cordova/plugin/cardconnectplugin/cardconnectplugin"/>
+
+<source-file src="src/android/SwiperTestFragment.java" target-dir="src/cordova/plugin/cardconnectplugin/cardconnectplugin"/>
+
+<source-file src="src/android/UrlFragmentDialog.java" target-dir="src/cordova/plugin/cardconnectplugin/cardconnectplugin"/>
+
 <edit-config file="AndroidManifest.xml" target="/manifest/application" mode="merge">
     <application android:name="cordova.plugin.cardconnectplugin.cardconnectplugin.MainApp" />
     <application android:networkSecurityConfig="@xml/network_security_config" />
     <uses-sdk android:minSdkVersion="24" android:maxSdkVersion="30" />
 </edit-config>
 
+<config-file target="AndroidManifest.xml" parent="/manifest">
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    </config-file>
+<config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <activity android:label="CustomFlowActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar" android:name="cordova.plugin.cardconnectplugin.cardconnectplugin.CustomFlowActivity"></activity>
+<activity android:label="MainActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar" android:name="cordova.plugin.cardconnectplugin.cardconnectplugin.MainActivity"></activity>
+<activity android:label="SwiperTestActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar" android:name="cordova.plugin.cardconnectplugin.cardconnectplugin.SwiperTestActivity"></activity>
+        </config-file>
+
 <resource-file src="src/android/MyColors.xml" target="res/values/MyColors.xml" />
 <resource-file src="src/android/MyThemes.xml" target="res/values/MyThemes.xml" />
+<resource-file src="src/android/MyStrings.xml" target="res/values/MyStrings.xml" />
+<resource-file src="src/android/MyDimens.xml" target="res/values/MyDimens.xml" />
+<resource-file src="src/android/linear_layout_border.xml" target="res/drawable/linear_layout_border.xml" />
 <resource-file src="src/android/network_security_config.xml" target="res/xml/network_security_config.xml" />
+
+
+<resource-file src="src/android/layouts/activity_custom_flow.xml" target="res/layout/activity_custom_flow.xml" />
+<resource-file src="src/android/layouts/activity_main.xml" target="res/layout/activity_main.xml" />
+<resource-file src="src/android/layouts/activity_swiper_test.xml" target="res/layout/activity_swiper_test.xml" />
+<resource-file src="src/android/layouts/app_bar_container.xml" target="res/layout/app_bar_container.xml" />
+<resource-file src="src/android/layouts/dialog_fragment_spinner.xml" target="res/layout/dialog_fragment_spinner.xml" />
+<resource-file src="src/android/layouts/dialog_select_device.xml" target="res/layout/dialog_select_device.xml" />
+<resource-file src="src/android/layouts/dialog_url.xml" target="res/layout/dialog_url.xml" />
+<resource-file src="src/android/layouts/fragment_swiper_test.xml" target="res/layout/fragment_swiper_test.xml" />
+
 
 <framework src="src/android/myplugin.gradle" custom="true" type="gradleReference"/>
 <lib-file src="src/android/boltsdk-release.aar"/>

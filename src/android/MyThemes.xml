@@ -16,6 +16,10 @@
 
     <style name="ConsumerAppImplementer.Theme" parent="AppConsumerTheme.NoActionBar"/>
 
+    <style name="AppToolbarTheme" parent="Base.Widget.Design.TabLayout">
+        <item name="colorControlNormal">@android:color/white</item>
+    </style>
+
     <style name="ConsumerAppImplementer.Translucent" parent="AppConsumerTheme.Translucent">
         <!--<item name="confirmationActionButtonTextColor">@android:color/holo_red_dark</item>-->
         <!--<item name="consumerActionButtonTextSize">@dimen/text_size_small</item>-->

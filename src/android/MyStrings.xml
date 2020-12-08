@@ -1,0 +1,42 @@
+<resources>
+    <string name="custom_flow">Custom flow</string>
+    <string name="enter_card_number">Card Number</string>
+    <string name="enter_cvv">CVV</string>
+    <string name="mm_yy">MM/YY</string>
+    <string name="generate_token">Generate Token</string>
+    <string name="error">Error</string>
+    <string name="token_generated_format">Token Generated: %1$s</string>
+    <string name="card_not_valid">Card number not valid!</string>
+    <string name="text_format_option_last_four">last four</string>
+    <string name="text_format_option_first_last_four">first and last four</string>
+    <string name="text_format_option_mask_last_four">mask last four</string>
+    <string name="card_invalid">Your card is invalid</string>
+    <string name="postal_code">Postal code</string>
+    <string name="expiration_date">Expiration Date</string>
+    <string name="save_account">Generate Token</string>
+    <string name="date_not_valid">Expiration Date not valid!</string>
+    <string name="cvv_not_valid">Cvv code not valid!</string>
+    <string name="swiper_connection_status">Swiper Connection Status:</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="connected">Connected</string>
+    <string name="ready_for_swipe">Ready for swipe</string>
+    <string name="integrated_flow">Integrated flow</string>
+    <string name="selected_account_text_format">Selected Account: %1$s,%2$s</string>
+    <string name="selected_android_pay_account_text_format">Android Pay Account Selected: Transaction Id: %1$s,
+        Token: %2$s
+    </string>
+    <string name="show_activity_with_dynamic_fragment">Activity with dynamic fragment</string>
+    <string name="swiper_initialization">Swiper Initialization</string>
+    <string name="activity_s_fragment">Activity\'s fragment</string>
+    <string name="activity_example_with_fragment">Example Activity with Fragment</string>
+    <string name="show_fragment_by_action">Show Fragment by Action</string>
+    <string name="menu_title_change_url">Change Url</string>
+    <string name="consumer_url">Consumer Url</string>
+    <string name="select_device">Select Device</string>
+
+    <!-- Cardconnect endpoints -->
+    <string name="cardconnect_qa_post_url">https://qa.cardconnect.com</string>
+    <string name="cardconnect_prod_post_url">https://fts.cardconnect.com</string>
+    <string name="cardconnect_uat_post_url">https://fts.cardconnect.com</string>
+
+</resources>

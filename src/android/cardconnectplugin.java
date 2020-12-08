@@ -1,5 +1,7 @@
 package cordova.plugin.cardconnectplugin.cardconnectplugin;
 
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import org.apache.cordova.CordovaInterface;
@@ -28,7 +30,7 @@ public class cardconnectplugin extends CordovaPlugin {
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-        if (action.equals("actionInitlisePayment")) {
+        if (action.equals("actionInitliseMannualPayment")) {
             String tokensiseUrl = args.getString(0);
 		    String  cardNumber = args.getString(1);
 	        String amount = args.getString(2);
@@ -40,9 +42,21 @@ public class cardconnectplugin extends CordovaPlugin {
                 }
             });
             return true;
+        } 
+	Context context = cordova.getActivity().getApplicationContext();
+         if(action.equals("actionInitliseCardPayment")) {
+            this.openMainActivity(context);
+            return true;
         }
+
+
         return false;
     }
+
+     private void openMainActivity(Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        this.cordova.getActivity().startActivity(intent);
+    	}
 
     public void generateToken(CallbackContext callbackContext, String tokeniseUrl, String cardNumber, String amount){
         SwiperControllerManager.getInstance().setSwiperControllerListener(mSwiperControllerListener);
