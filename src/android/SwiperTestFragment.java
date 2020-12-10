@@ -2,6 +2,7 @@ package cordova.plugin.cardconnectplugin.cardconnectplugin;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
+import com.bolt.consumersdk.CCConsumer;
 import com.bolt.consumersdk.domain.CCConsumerAccount;
 import com.bolt.consumersdk.domain.CCConsumerError;
 import com.bolt.consumersdk.swiper.CCSwiperController;
@@ -35,6 +37,22 @@ public class SwiperTestFragment extends BaseFragment {
     private CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener = null;
     private boolean bConnected = false;
     private SwiperControllerListener mSwiperControllerListener = null;
+
+    public interface TokenListner{
+        public void onTokenGenerated(String token);
+    }
+
+    TokenListner tokenListner;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            tokenListner = (TokenListner) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement onSomeEventListener");
+        }
+    }
 
     @Nullable
     @Override
@@ -89,6 +107,7 @@ public class SwiperTestFragment extends BaseFragment {
                     Log.d(TAG, "Token Generated");
                     showSnackBarMessage("Token Generated: " + account.getToken());
                     mConnectionStateTextView.setText(mConnectionStateTextView.getText() + "\r\n" + "Token Generated: " + account.getToken());
+                    tokenListner.onTokenGenerated(account.getToken());
                 } else {
                     showErrorDialog(error.getResponseMessage());
                 }
@@ -274,6 +293,11 @@ public class SwiperTestFragment extends BaseFragment {
         super.onPause();
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
     private void updateConnectionProgress() {
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
@@ -286,3 +310,4 @@ public class SwiperTestFragment extends BaseFragment {
         }, 2000);
     }
 }
+

@@ -1,6 +1,7 @@
 package cordova.plugin.cardconnectplugin.cardconnectplugin;
 
 import android.Manifest;
+import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -42,7 +44,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class MainActivity extends BaseActivity implements View.OnClickListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener, SwiperTestFragment.TokenListner {
     private int REQUEST_PERMISSIONS = 1000;
     private Button m_btnSelectDevice = null;
     private Button m_btnCustomFlow = null;
@@ -62,17 +64,30 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-	    String package_name = getApplication().getPackageName();
-        setContentView(getApplication().getResources().getIdentifier("activity_main", "layout", package_name));
-        //setContentView(R.layout.activity_main);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            String package_name = getApplication().getPackageName();
+            setContentView(getApplication().getResources().getIdentifier("activity_main", "layout", package_name));
+            //setContentView(R.layout.activity_main);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        //setupToolBar();
-        setupListeners();
-        setupViews();
+            //setupToolBar();
+            setupListeners();
+            setupViews();
+
+            ImageView btn_close = (ImageView) findViewById(R.id.btn_close);
+            btn_close.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra("token", "123456789");
+                    setResult(Activity.RESULT_OK, resultIntent);
+                    finish();
+                    finish();
+                }
+            });
     }
 
     private void setupListeners() {
+
         mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,6 +151,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     SwiperControllerManager.getInstance().setMACAddress(ble.getAddress());
                     updateDeviceButtonTitle();
                     alertDialog.dismiss();
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.frame_layout_container, new SwiperTestFragment(), SwiperTestFragment.TAG)
+                            .addToBackStack(SwiperTestFragment.TAG).commit();
                 }
             }
         };
@@ -298,6 +316,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     @Override
+    protected void onStop() {
+        CCConsumer.getInstance().getApi().removeBluetoothListener();
+        super.onStop();
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_PERMISSIONS) {
             for (int i = 0; i < permissions.length; i++) {
@@ -336,4 +360,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         String[] permissions = {Manifest.permission.RECORD_AUDIO, Manifest.permission.ACCESS_FINE_LOCATION};
         ActivityCompat.requestPermissions(this, permissions, REQUEST_PERMISSIONS);
     }
+
+
+    @Override
+    public void onTokenGenerated(String token) {
+        SwiperControllerManager.getInstance().disconnectFromDevice();
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("token", token);
+        setResult(Activity.RESULT_OK, resultIntent);
+        finish();
+    }
 }
+

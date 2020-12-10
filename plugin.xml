@@ -50,8 +50,25 @@
     </config-file>
 <config-file target="AndroidManifest.xml" parent="/manifest/application">
             <activity android:label="CustomFlowActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar" android:name="cordova.plugin.cardconnectplugin.cardconnectplugin.CustomFlowActivity"></activity>
-<activity android:label="MainActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar" android:name="cordova.plugin.cardconnectplugin.cardconnectplugin.MainActivity"></activity>
+
+<activity android:label="MainActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar" android:name="cordova.plugin.cardconnectplugin.cardconnectplugin.MainActivity">
+<intent-filter>
+          <action android:name="cordova.plugin.cardconnectplugin.cardconnectplugin.MainActivity" />
+          <category android:name="android.intent.category.DEFAULT" />
+</intent-filter>
+</activity>
+
 <activity android:label="SwiperTestActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar" android:name="cordova.plugin.cardconnectplugin.cardconnectplugin.SwiperTestActivity"></activity>
+
+<activity android:name="com.bolt.consumersdk.views.payment.accounts.PaymentAccountsActivity"
+            android:theme="@style/ConsumerAppImplementer.Theme" />
+        <activity android:name="com.bolt.consumersdk.views.payment.createaccount.CreateAccountActivity"
+            android:theme="@style/ConsumerAppImplementer.Theme" />
+        <activity android:name="com.bolt.consumersdk.views.payment.editaccount.EditAccountActivity"
+            android:theme="@style/ConsumerAppImplementer.Theme" />
+        <activity
+            android:name="com.bolt.consumersdk.androidpay.CConsumerConfirmationActivity"
+            android:theme="@style/ConsumerAppImplementer.Translucent" />
         </config-file>
 
 <resource-file src="src/android/MyColors.xml" target="res/values/MyColors.xml" />
