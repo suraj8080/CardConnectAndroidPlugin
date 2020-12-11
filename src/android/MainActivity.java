@@ -3,12 +3,14 @@ package cordova.plugin.cardconnectplugin.cardconnectplugin;
 import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -38,11 +40,23 @@ import com.bolt.consumersdk.network.CCConsumerApi;
 import com.bolt.consumersdk.swiper.enums.SwiperType;
 import com.bolt.consumersdk.views.payment.accounts.PaymentAccountsActivity;
 import com.evontech.cardconnectdemo.R;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
+import org.apache.cordova.CallbackContext;
+import org.apache.cordova.CordovaActivity;
+import org.apache.cordova.CordovaInterface;
+import org.apache.cordova.CordovaPlugin;
+import org.apache.cordova.PluginResult;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener, SwiperTestFragment.TokenListner {
     private int REQUEST_PERMISSIONS = 1000;
@@ -60,13 +74,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private AdapterView.OnItemClickListener mOnItemClickListener = null;
     private BluetoothSearchResponseListener mBluetoothSearchResponseListener = null;
     private AlertDialog alertDialog = null;
+    public static CallbackContext mCallbackContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
             String package_name = getApplication().getPackageName();
-            setContentView(getApplication().getResources().getIdentifier("activity_main", "layout", package_name));
-            //setContentView(R.layout.activity_main);
+            //setContentView(getApplication().getResources().getIdentifier("activity_main", "layout", package_name));
+            setContentView(R.layout.activity_main);
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
             //setupToolBar();
@@ -77,11 +92,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             btn_close.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent resultIntent = new Intent();
-                    resultIntent.putExtra("token", "123456789");
-                    setResult(Activity.RESULT_OK, resultIntent);
-                    finish();
-                    finish();
+                    closePaymentView();
                 }
             });
     }
@@ -337,7 +348,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public String getPermissionDeniedString(String str){
         String strResult = "";
 
-        if (str.equals(Manifest.permission.ACCESS_FINE_LOCATION)){
+        if (str.equals(Manifest.permission.BLUETOOTH)){
             strResult = "Bluetooth permission denied, Unable to connect to bluetooth device.";
         } else if (str.equals(Manifest.permission.RECORD_AUDIO)){
             strResult = "Record Audio permission denied, Unable to connect to audio jack device.";
@@ -351,24 +362,68 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private Boolean checkPermission() {
-        return (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
+        return (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) ==
         PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED);
     }
 
     private void requestPermission() {
-        String[] permissions = {Manifest.permission.RECORD_AUDIO, Manifest.permission.ACCESS_FINE_LOCATION};
+        String[] permissions = {Manifest.permission.RECORD_AUDIO, Manifest.permission.BLUETOOTH};
         ActivityCompat.requestPermissions(this, permissions, REQUEST_PERMISSIONS);
     }
 
 
     @Override
-    public void onTokenGenerated(String token) {
+    public void onTokenGenerated(CCConsumerAccount accountToken) {
+        //PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, token);
+
+        JSONObject responseJObject = new JSONObject();
+        Gson gson = new Gson();
+        try {
+            //String tokenObject = gson.toJson(accountToken);
+            responseJObject.put("message", "No error");
+            responseJObject.put("errorcode", 0);
+            responseJObject.put("token", accountToken.getToken());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        //MainApp.getInstance().getCallbackContext().success(responseJObject.toString());
+        mCallbackContext.success(responseJObject.toString());
+    }
+
+    @Override
+    public void onError(String errorMessage) {
+        JSONObject responseJObject = new JSONObject();
+        try {
+            responseJObject.put("message", errorMessage);
+            responseJObject.put("errorcode", 1);
+            responseJObject.put("token", null);
+            Log.d("responseJObject ", responseJObject.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        MainApp.getInstance().getCallbackContext().error(responseJObject.toString());
+    }
+
+
+    public void closePaymentView(){
+        CCConsumer.getInstance().getApi().removeBluetoothListener();
         SwiperControllerManager.getInstance().disconnectFromDevice();
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra("token", token);
-        setResult(Activity.RESULT_OK, resultIntent);
+        mBluetoothSearchResponseListener = null;
+        setResult(RESULT_OK, null);
         finish();
     }
+
+/*
+    2020-12-11 18:06:26.855 3013-3013/com.evontech.cardconnectdemo W/CordovaPlugin: Attempted to send a second callback for ID: cardconnectplugin728660576
+    Result was: "{\"message\":\"No error\",\"errorcode\":0,\"object\":\"9227195132430279\"}"
+
+            2020-12-11 18:07:43.332 3013-3013/com.evontech.cardconnectdemo W/CordovaPlugin: Attempted to send a second callback for ID: cardconnectplugin728660576
+    Result was: "{\"message\":\"No error\",\"errorcode\":0,\"object\":\"9227195132430279\"}"*/
+
+
+
+
 }
+
 

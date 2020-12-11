@@ -39,26 +39,24 @@ public class SwiperTestFragment extends BaseFragment {
     private SwiperControllerListener mSwiperControllerListener = null;
 
     public interface TokenListner{
-        public void onTokenGenerated(String token);
+        public void onTokenGenerated(CCConsumerAccount accountToken);
+        public void onError(String errorMessage);
     }
-
     TokenListner tokenListner;
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            tokenListner = (TokenListner) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement onSomeEventListener");
-        }
-    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_swiper_test, container, false);
+
+        Activity activity = getActivity();
+        try {
+            tokenListner = (TokenListner)activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement onSomeEventListener");
+        }
 
         setupListeners();
 
@@ -68,17 +66,14 @@ public class SwiperTestFragment extends BaseFragment {
         mSwitchSwipeOrTap = (Switch) v.findViewById(R.id.fragment_swiper_test_switchSwipeORTap);
         mSwitchSwipeOrTap.setOnCheckedChangeListener(mOnCheckedChangeListener);
 
-
         requestRecordAudioPermission();
         updateConnectionProgress();
-
-
 
         return v;
     }
 
     private void setupListeners() {
-        mOnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
+        /*mOnCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mSwitchSwipeOrTap.setEnabled(false);
@@ -96,119 +91,174 @@ public class SwiperTestFragment extends BaseFragment {
                     }
                 }, 20000);
             }
-        };
+        };*/
 
-        mSwiperControllerListener = new SwiperControllerListener() {
-            @Override
-            public void onTokenGenerated(CCConsumerAccount account, CCConsumerError error) {
-                Log.d(TAG, "onTokenGenerated");
-                dismissProgressDialog();
-                if (error == null) {
-                    Log.d(TAG, "Token Generated");
-                    showSnackBarMessage("Token Generated: " + account.getToken());
-                    mConnectionStateTextView.setText(mConnectionStateTextView.getText() + "\r\n" + "Token Generated: " + account.getToken());
-                    tokenListner.onTokenGenerated(account.getToken());
-                } else {
-                    showErrorDialog(error.getResponseMessage());
-                }
-            }
-
-            @Override
-            public void onError(SwiperError swipeError) {
-                Log.d(TAG, swipeError.toString());
-            }
-
-            @Override
-            public void onSwiperReadyForCard() {
-                Log.d(TAG, "Swiper ready for card");
-                showSnackBarMessage(getString(R.string.ready_for_swipe));
-            }
-
-            @Override
-            public void onSwiperConnected() {
-                Log.d(TAG, "Swiper connected");
-                mConnectionStateTextView.setText(R.string.connected);
-                bConnected = true;
-
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        updateSwitchText();
-                        resetSwiper();
+            mSwiperControllerListener = new SwiperControllerListener() {
+                @Override
+                public void onTokenGenerated(CCConsumerAccount account, CCConsumerError error) {
+                    try {
+                        Log.d(TAG, "onTokenGenerated");
+                        dismissProgressDialog();
+                        if (error == null) {
+                            Log.d(TAG, "Token Generated");
+                            showSnackBarMessage("Token Generated: " + account.getToken());
+                            mConnectionStateTextView.setText(mConnectionStateTextView.getText() + "\r\n" + "Token Generated: " + account.getToken());
+                            tokenListner.onTokenGenerated(account);
+                        } else {
+                            showErrorDialog(error.getResponseMessage());
+                            tokenListner.onError(error.getResponseMessage());
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
                     }
-                }, 2000);
-
-                mSwitchSwipeOrTap.setEnabled(true);
-            }
-
-            @Override
-            public void onSwiperDisconnected() {
-                Log.d(TAG, "Swiper disconnected");
-                mConnectionStateTextView.setText(R.string.disconnected);
-            }
-
-            @Override
-            public void onBatteryState(BatteryState batteryState) {
-                Log.d(TAG, batteryState.toString());
-                switch (batteryState){
-                    case LOW:
-                        showSnackBarMessage("Battery is low!");
-                        break;
-                    case CRITICALLY_LOW:
-                        showSnackBarMessage("Battery is critically low!");
-                        break;
                 }
+
+                @Override
+                public void onError(SwiperError swipeError) {
+                    try {
+                    Log.d(TAG, swipeError.toString());
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onSwiperReadyForCard() {
+                    try {
+                    Log.d(TAG, "Swiper ready for card");
+                    if (getActivity() != null)
+                        showSnackBarMessage(getString(R.string.ready_for_swipe));
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onSwiperConnected() {
+                    try {
+                    Log.d(TAG, "Swiper connected");
+                    mConnectionStateTextView.setText(R.string.connected);
+                    bConnected = true;
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            updateSwitchText();
+                            resetSwiper();
+                        }
+                    }, 2000);
+
+                    mSwitchSwipeOrTap.setEnabled(true);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onSwiperDisconnected() {
+                    try {
+                    Log.d(TAG, "Swiper disconnected");
+                    mConnectionStateTextView.setText(R.string.disconnected);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onBatteryState(BatteryState batteryState) {
+                    try{
+                    Log.d(TAG, batteryState.toString());
+                    switch (batteryState) {
+                        case LOW:
+                            showSnackBarMessage("Battery is low!");
+                            break;
+                        case CRITICALLY_LOW:
+                            showSnackBarMessage("Battery is critically low!");
+                            break;
+                    }
+                    }catch (Exception e){
+                    e.printStackTrace();
+                }
+                }
+
+                @Override
+                public void onStartTokenGeneration() {
+                    try{
+                    if (getActivity() != null)
+                        showProgressDialog();
+                    Log.d(TAG, "Token Generation started.");
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onLogUpdate(String strLogUpdate) {
+                    try{
+                    mConnectionStateTextView.setText(mConnectionStateTextView.getText() + "\r\n" + strLogUpdate);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onDeviceConfigurationUpdate(String s) {
+                }
+
+                @Override
+                public void onConfigurationProgressUpdate(double v) {
+
+                }
+
+                @Override
+                public void onConfigurationComplete(boolean b) {
+
+                }
+
+                @Override
+                public void onTimeout() {
+
+                    //resetSwiper();
+                }
+
+                @Override
+                public void onLCDDisplayUpdate(String str) {
+                    try{
+                    mConnectionStateTextView.setText(mConnectionStateTextView.getText() + "\r\n" + str);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onRemoveCardRequested() {
+                    try {
+                    if (getActivity() != null)
+                        showRemoveCardDialog();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onCardRemoved() {
+                    try {
+                        if (getActivity() != null)
+                            hideRemoveCardDialog();
+                        if (((CCSwiperController) SwiperControllerManager.getInstance().getSwiperController()) != null)
+                            resetSwiper();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            };
+            try {
+            SwiperControllerManager.getInstance().setSwiperControllerListener(mSwiperControllerListener);
+            }catch (Exception e){
+                e.printStackTrace();
             }
+        }
 
-            @Override
-            public void onStartTokenGeneration() {
-                showProgressDialog();
-                Log.d(TAG, "Token Generation started.");
-            }
-
-            @Override
-            public void onLogUpdate(String strLogUpdate) {
-                mConnectionStateTextView.setText(mConnectionStateTextView.getText() + "\r\n" + strLogUpdate);
-            }
-
-            @Override
-            public void onDeviceConfigurationUpdate(String s) {
-            }
-
-            @Override
-            public void onConfigurationProgressUpdate(double v) {
-
-            }
-
-            @Override
-            public void onConfigurationComplete(boolean b) {
-
-            }
-
-            @Override
-            public void onTimeout() {
-
-                //resetSwiper();
-            }
-
-            @Override
-            public void onLCDDisplayUpdate(String str) {
-                mConnectionStateTextView.setText(mConnectionStateTextView.getText() + "\r\n" + str);
-            }
-
-            @Override
-            public void onRemoveCardRequested() {
-                showRemoveCardDialog();
-            }
-
-            @Override
-            public void onCardRemoved() {
-                hideRemoveCardDialog();
-                resetSwiper();
-            }
-        };
-        SwiperControllerManager.getInstance().setSwiperControllerListener(mSwiperControllerListener);
-    }
 
     private void hideRemoveCardDialog() {
         Activity activity = getActivity();
@@ -269,23 +319,27 @@ public class SwiperTestFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
 
-        if (SwiperControllerManager.getInstance().isSwiperConnected()) {
-            mSwiperControllerListener.onSwiperConnected();
-        } else {
-            SwiperControllerManager.getInstance().connectToDevice();
-            updateConnectionProgress();
-        }
+        try {
+            if (SwiperControllerManager.getInstance().isSwiperConnected()) {
+                mSwiperControllerListener.onSwiperConnected();
+            } else {
+                SwiperControllerManager.getInstance().connectToDevice();
+                updateConnectionProgress();
+            }
 
-        switch (SwiperControllerManager.getInstance().getSwiperType()) {
-            case BBPosDevice:
-                Log.d("Type ", "BBPosDevice");
-                mSwitchSwipeOrTap.setVisibility(View.GONE);
-                break;
-            case IDTech:
-                mSwitchSwipeOrTap.setVisibility(View.VISIBLE);
-                Log.d("Type ", "IDTech");
-                break;
-        }
+            switch (SwiperControllerManager.getInstance().getSwiperType()) {
+                case BBPosDevice:
+                    Log.d("Type ", "BBPosDevice");
+                    mSwitchSwipeOrTap.setVisibility(View.GONE);
+                    break;
+                case IDTech:
+                    mSwitchSwipeOrTap.setVisibility(View.VISIBLE);
+                    Log.d("Type ", "IDTech");
+                    break;
+            }
+        }catch (Exception e){
+        e.printStackTrace();
+    }
     }
 
     @Override
@@ -299,6 +353,7 @@ public class SwiperTestFragment extends BaseFragment {
     }
 
     private void updateConnectionProgress() {
+        try {
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -308,6 +363,10 @@ public class SwiperTestFragment extends BaseFragment {
                 }
             }
         }, 2000);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }
+
 

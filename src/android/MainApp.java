@@ -6,6 +6,8 @@ import com.bolt.consumersdk.CCConsumer;
 import com.bolt.consumersdk.network.CCConsumerApi;
 import com.bolt.consumersdk.swiper.enums.SwiperType;
 
+import org.apache.cordova.CallbackContext;
+
 public class MainApp extends Application {
 
     private static String TAG = cordova.plugin.cardconnectplugin.cardconnectplugin.MainApp.class.getSimpleName();
@@ -18,6 +20,18 @@ public class MainApp extends Application {
     public static cordova.plugin.cardconnectplugin.cardconnectplugin.MainApp getInstance() {
         return sAppContext;
     }
+
+    public CallbackContext getCallbackContext() {
+        return callbackContext;
+    }
+
+    public void setCallbackContext(CallbackContext callbackContext) {
+        this.callbackContext = callbackContext;
+    }
+
+    private CallbackContext callbackContext;
+
+
 
     @Override
     public void onCreate() {
@@ -36,4 +50,5 @@ public class MainApp extends Application {
 
 
 }
+
 

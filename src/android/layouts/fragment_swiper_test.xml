@@ -13,12 +13,14 @@
     tools:context="cordova.plugin.cardconnectplugin.cardconnectplugin.SwiperTestActivity">
 
     <TextView
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/activity_s_fragment" />
 
     <Switch
+        android:visibility="gone"
         android:id="@+id/fragment_swiper_test_switchSwipeORTap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -33,3 +35,4 @@
         android:text="@string/disconnected" />
 
 </LinearLayout>
+

@@ -4,22 +4,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import org.apache.cordova.CordovaInterface;
-import org.apache.cordova.CordovaPlugin;
-import org.apache.cordova.CallbackContext;
-
-import org.apache.cordova.PluginResult;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.bolt.consumersdk.CCConsumerTokenCallback;
 import com.bolt.consumersdk.domain.CCConsumerAccount;
 import com.bolt.consumersdk.domain.CCConsumerCardInfo;
 import com.bolt.consumersdk.domain.CCConsumerError;
 import com.bolt.consumersdk.swiper.SwiperControllerListener;
 
-import static android.app.Activity.RESULT_OK;
+import org.apache.cordova.CallbackContext;
+import org.apache.cordova.CordovaPlugin;
+import org.apache.cordova.PluginResult;
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import static cordova.plugin.cardconnectplugin.cardconnectplugin.MainActivity.mCallbackContext;
 
 /**
  * This class echoes a string called from JavaScript.
@@ -30,11 +27,13 @@ public class cardconnectplugin extends CordovaPlugin {
     private SwiperControllerListener mSwiperControllerListener = null;
     private String accountToken;
     private String errorMessage;
-    private CallbackContext PUBLIC_CALLBACKS = null;
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-        PUBLIC_CALLBACKS = callbackContext;
+        MainApp.getInstance().setCallbackContext(callbackContext);
+        mCallbackContext = callbackContext;
+        Log.d("callbackContext ",  " Hello ");
+        Log.d("callbackContext ",  " Hello "+MainApp.getInstance().getCallbackContext());
         if (action.equals("actionInitliseMannualPayment")) {
             String tokensiseUrl = args.getString(0);
 		    String  cardNumber = args.getString(1);
@@ -50,9 +49,10 @@ public class cardconnectplugin extends CordovaPlugin {
         } 
 	Context context = cordova.getActivity().getApplicationContext();
          if(action.equals("actionInitliseCardPayment")) {
-            this.openMainActivity(context);
+                     Intent intent = new Intent("cordova.plugin.cardconnectplugin.cardconnectplugin.MainActivity");
+                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                     cordova.startActivityForResult((CordovaPlugin) cardconnectplugin.this, intent, 105);
         }
-
         // Send no result, to execute the callbacks later
         PluginResult pluginResult = new  PluginResult(PluginResult.Status.NO_RESULT);
         pluginResult.setKeepCallback(true); // Keep callback
@@ -61,29 +61,16 @@ public class cardconnectplugin extends CordovaPlugin {
         //return false;
     }
 
-     private void openMainActivity(Context context) {
-         cordova.getThreadPool().execute(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent("cordova.plugin.cardconnectplugin.cardconnectplugin.MainActivity");
-                cordova.startActivityForResult((CordovaPlugin) cardconnectplugin.this, intent, 105);
-            }
-        });
-    	}
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        Log.d("requestCode "+requestCode, "resultCode: "+resultCode);
+        Log.d("cardconnectplugin ", "onActivityResult: called");
         if(resultCode == cordova.getActivity().RESULT_OK){
-            accountToken = intent.getStringExtra("token");
-                Log.d("onActivityResult ", "Account Token: " + accountToken);
-
+            /*accountToken = intent.getStringExtra("token");
+            Log.d("onActivityResult ", "Account Token: " + accountToken);
             PluginResult resultado = new PluginResult(PluginResult.Status.OK, "this value will be sent to cordova");
             resultado.setKeepCallback(true);
-           // PUBLIC_CALLBACKS.sendPluginResult(resultado);
-
-             responseInitlisePayment("Account Token is: " + accountToken, PUBLIC_CALLBACKS);
-                //cordova.getActivity().finish();
+            responseInitlisePayment("Account Token is: " + accountToken, PUBLIC_CALLBACKS);
+            //cordova.getActivity().finish();*/
             return;
         }
 
@@ -126,6 +113,7 @@ public class cardconnectplugin extends CordovaPlugin {
         }
     }
 }
+
 
 
 
