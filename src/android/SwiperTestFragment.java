@@ -319,8 +319,8 @@ public class SwiperTestFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
 
-        try {
             if (SwiperControllerManager.getInstance().isSwiperConnected()) {
+                Log.d("swiperConnected ", "true");
                 mSwiperControllerListener.onSwiperConnected();
             } else {
                 SwiperControllerManager.getInstance().connectToDevice();
@@ -337,9 +337,6 @@ public class SwiperTestFragment extends BaseFragment {
                     Log.d("Type ", "IDTech");
                     break;
             }
-        }catch (Exception e){
-        e.printStackTrace();
-    }
     }
 
     @Override

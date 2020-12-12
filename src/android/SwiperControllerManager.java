@@ -235,8 +235,11 @@ public class SwiperControllerManager {
      * Disconnect from swiper device
      */
     public void disconnectFromDevice() {
-        mSwiperController.release();
-        mSwiperController = null;
+        if(mSwiperController!=null) {
+            mSwiperController.release();
+            //mSwiperController.cancelTransaction();
+            mSwiperController = null;
+        }
     }
 
     /***
@@ -283,7 +286,7 @@ public class SwiperControllerManager {
         }
 
         mSwiperType = swiperType;
-        setupConsumerApi();
+        //setupConsumerApi();
 
         if ((bReset || mSwiperController == null) && !TextUtils.isEmpty(mDeviceMACAddress)) {
             createSwiperController();
@@ -309,4 +312,5 @@ public class SwiperControllerManager {
         CCConsumer.getInstance().getApi().setDebugEnabled(true);
     }
 }
+
 

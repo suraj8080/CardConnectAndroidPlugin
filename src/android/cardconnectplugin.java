@@ -1,14 +1,17 @@
 package cordova.plugin.cardconnectplugin.cardconnectplugin;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.bolt.consumersdk.CCConsumer;
 import com.bolt.consumersdk.CCConsumerTokenCallback;
 import com.bolt.consumersdk.domain.CCConsumerAccount;
 import com.bolt.consumersdk.domain.CCConsumerCardInfo;
 import com.bolt.consumersdk.domain.CCConsumerError;
 import com.bolt.consumersdk.swiper.SwiperControllerListener;
+import com.evontech.cardconnectdemo.R;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
@@ -32,13 +35,11 @@ public class cardconnectplugin extends CordovaPlugin {
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         MainApp.getInstance().setCallbackContext(callbackContext);
         mCallbackContext = callbackContext;
-        Log.d("callbackContext ",  " Hello ");
-        Log.d("callbackContext ",  " Hello "+MainApp.getInstance().getCallbackContext());
+        Log.d("callbackContext ",  "  "+MainApp.getInstance().getCallbackContext());
         if (action.equals("actionInitliseMannualPayment")) {
             String tokensiseUrl = args.getString(0);
 		    String  cardNumber = args.getString(1);
 	        String amount = args.getString(2);
-	        String response = "Token for card number is "+cardNumber;
             cordova.getThreadPool().execute(new Runnable() {
                 @Override
                 public void run() {
@@ -46,35 +47,30 @@ public class cardconnectplugin extends CordovaPlugin {
                 }
             });
             return true;
-        } 
-	Context context = cordova.getActivity().getApplicationContext();
-         if(action.equals("actionInitliseCardPayment")) {
-                     Intent intent = new Intent("cordova.plugin.cardconnectplugin.cardconnectplugin.MainActivity");
-                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                     cordova.startActivityForResult((CordovaPlugin) cardconnectplugin.this, intent, 105);
-        }
-        // Send no result, to execute the callbacks later
-        PluginResult pluginResult = new  PluginResult(PluginResult.Status.NO_RESULT);
-        pluginResult.setKeepCallback(true); // Keep callback
-        return true;
+        } else if(action.equals("actionInitliseCardPayment")) {
+             String tokensiseUrl = args.getString(0);
+             MainApp.getConsumerApi().setEndPoint(tokensiseUrl);
+             Intent intent = new Intent("cordova.plugin.cardconnectplugin.cardconnectplugin.MainActivity");
+             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+             //cordova.startActivityForResult((CordovaPlugin) cardconnectplugin.this, intent, 105);
+             cordova.getActivity().startActivity(intent);
 
-        //return false;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        Log.d("cardconnectplugin ", "onActivityResult: called");
-        if(resultCode == cordova.getActivity().RESULT_OK){
-            /*accountToken = intent.getStringExtra("token");
-            Log.d("onActivityResult ", "Account Token: " + accountToken);
-            PluginResult resultado = new PluginResult(PluginResult.Status.OK, "this value will be sent to cordova");
-            resultado.setKeepCallback(true);
-            responseInitlisePayment("Account Token is: " + accountToken, PUBLIC_CALLBACKS);
-            //cordova.getActivity().finish();*/
-            return;
+            // Send no result, to execute the callbacks later
+            PluginResult pluginResult = new  PluginResult(PluginResult.Status.NO_RESULT);
+            pluginResult.setKeepCallback(true); // Keep callback
+            return true;
+        } else if (action.equals("closePluginView")) {
+            try {
+                Activity activity = this.cordova.getActivity();
+                activity.finish();
+                callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, 0));
+            } catch (Exception e) {
+                callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, 1));
+            }
+            return true;
         }
 
-        super.onActivityResult(requestCode, resultCode, intent);
+        return false;
     }
 
     public void generateToken(CallbackContext callbackContext, String tokeniseUrl, String cardNumber, String amount){

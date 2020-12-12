@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -58,6 +59,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 
+import io.sentry.Sentry;
+
 public class MainActivity extends BaseActivity implements View.OnClickListener, SwiperTestFragment.TokenListner {
     private int REQUEST_PERMISSIONS = 1000;
     private Button m_btnSelectDevice = null;
@@ -79,8 +82,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-            String package_name = getApplication().getPackageName();
-            //setContentView(getApplication().getResources().getIdentifier("activity_main", "layout", package_name));
+        //Sentry.captureMessage("testing SDK setup");
             setContentView(R.layout.activity_main);
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -388,11 +390,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             e.printStackTrace();
         }
         //MainApp.getInstance().getCallbackContext().success(responseJObject.toString());
-        mCallbackContext.success(responseJObject.toString());
+        PluginResult result = new PluginResult(PluginResult.Status.OK,responseJObject.toString());
+        result.setKeepCallback(true);
+        Log.d("mCallbackContext Id ", mCallbackContext.getCallbackId());  //mCallbackContext Id: cardconnectplugin142239256  cardconnectplugin142239256
+        mCallbackContext.sendPluginResult(result);
     }
 
     @Override
-    public void onError(String errorMessage) {
+    public void onError(String errorMessage) {  //cardconnectplugin1748868259  cardconnectplugin1748868259
         JSONObject responseJObject = new JSONObject();
         try {
             responseJObject.put("message", errorMessage);
@@ -402,7 +407,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        MainApp.getInstance().getCallbackContext().error(responseJObject.toString());
+        mCallbackContext.error(responseJObject.toString());
     }
 
 
@@ -414,16 +419,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         finish();
     }
 
-/*
-    2020-12-11 18:06:26.855 3013-3013/com.evontech.cardconnectdemo W/CordovaPlugin: Attempted to send a second callback for ID: cardconnectplugin728660576
-    Result was: "{\"message\":\"No error\",\"errorcode\":0,\"object\":\"9227195132430279\"}"
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            onBackPressed();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
-            2020-12-11 18:07:43.332 3013-3013/com.evontech.cardconnectdemo W/CordovaPlugin: Attempted to send a second callback for ID: cardconnectplugin728660576
-    Result was: "{\"message\":\"No error\",\"errorcode\":0,\"object\":\"9227195132430279\"}"*/
-
-
-
-
+    public void onBackPressed() {
+        closePaymentView();
+        Log.d("onBack", "pressed");
+        finish();
+    }
 }
 
 

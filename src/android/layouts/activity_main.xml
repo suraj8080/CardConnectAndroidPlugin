@@ -13,8 +13,8 @@
         android:layout_alignParentEnd="true"
         android:id="@+id/btn_close"
         android:padding="5dp"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:tint="@android:color/black"
         android:src="@android:drawable/ic_menu_close_clear_cancel"/>
 
@@ -107,4 +107,5 @@
         />
 
 </RelativeLayout>
+
 
