@@ -350,7 +350,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public String getPermissionDeniedString(String str){
         String strResult = "";
 
-        if (str.equals(Manifest.permission.BLUETOOTH)){
+        if (str.equals(Manifest.permission.ACCESS_FINE_LOCATION)){
             strResult = "Bluetooth permission denied, Unable to connect to bluetooth device.";
         } else if (str.equals(Manifest.permission.RECORD_AUDIO)){
             strResult = "Record Audio permission denied, Unable to connect to audio jack device.";
@@ -364,13 +364,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private Boolean checkPermission() {
-        return (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) ==
+        return (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
         PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED);
     }
 
     private void requestPermission() {
-        String[] permissions = {Manifest.permission.RECORD_AUDIO, Manifest.permission.BLUETOOTH};
+        String[] permissions = {Manifest.permission.RECORD_AUDIO, Manifest.permission.ACCESS_FINE_LOCATION};
         ActivityCompat.requestPermissions(this, permissions, REQUEST_PERMISSIONS);
     }
 
