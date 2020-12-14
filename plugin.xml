@@ -79,6 +79,9 @@
 <resource-file src="src/android/network_security_config.xml" target="res/xml/network_security_config.xml" />
 
 
+<resource-file src="src/android/button_background_rounded_corner.xml" target="res/drawable/button_background_rounded_corner.xml" />
+<resource-file src="src/android/ic_baseline_arrow_back_24.xml" target="res/drawable/ic_baseline_arrow_back_24.xml" />
+
 <resource-file src="src/android/layouts/activity_custom_flow.xml" target="res/layout/activity_custom_flow.xml" />
 <resource-file src="src/android/layouts/activity_main.xml" target="res/layout/activity_main.xml" />
 <resource-file src="src/android/layouts/activity_swiper_test.xml" target="res/layout/activity_swiper_test.xml" />

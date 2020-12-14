@@ -1,9 +1,7 @@
 package cordova.plugin.cardconnectplugin.cardconnectplugin;
 
 import android.Manifest;
-import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -23,13 +21,10 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import com.bolt.ccconsumersdk.BuildConfig;
 import com.bolt.consumersdk.CCConsumer;
 import com.bolt.consumersdk.androidpay.CCConsumerAndroidPayActivity;
@@ -42,31 +37,20 @@ import com.bolt.consumersdk.swiper.enums.SwiperType;
 import com.bolt.consumersdk.views.payment.accounts.PaymentAccountsActivity;
 import com.evontech.cardconnectdemo.R;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-
 import org.apache.cordova.CallbackContext;
-import org.apache.cordova.CordovaActivity;
-import org.apache.cordova.CordovaInterface;
-import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.PluginResult;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-
-import io.sentry.Sentry;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener, SwiperTestFragment.TokenListner {
     private int REQUEST_PERMISSIONS = 1000;
     private Button m_btnSelectDevice = null;
     private Button m_btnCustomFlow = null;
-    private Button m_btnIntegratedFlow = null;
-    private Button m_btnShowActivityWithFragment = null;
+    private Button m_btnSwiperInitilization = null;
     private TextView m_txtvVersion = null;
     private LinearLayout m_llSearching = null;
     private ArrayAdapter<String> arrayAdapter = null;
@@ -111,12 +95,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     case R.id.button_custom_flow:
                         startCustomFlowActivity();
                         break;
-                    case R.id.button_integrated_flow:
-                        startCustomFlowActivity();
-                        break;
-                    case R.id.button_show_activity_with_fragment:
-                        Intent swiperActivity = new Intent(MainActivity.this, SwiperTestActivity.class);
-                        startActivity(swiperActivity);
+                    case R.id.button_swiper_initialization:
+                        if(!TextUtils.isEmpty(SwiperControllerManager.getInstance().getMACAddr())) {
+                            getSupportFragmentManager().beginTransaction()
+                                    .replace(R.id.frame_layout_container, new SwiperTestFragment(), SwiperTestFragment.TAG)
+                                    .addToBackStack(SwiperTestFragment.TAG).commit();
+                        }else showSelectDeviceTypeDialog();
                         break;
                 }
             }
@@ -164,9 +148,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     SwiperControllerManager.getInstance().setMACAddress(ble.getAddress());
                     updateDeviceButtonTitle();
                     alertDialog.dismiss();
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.frame_layout_container, new SwiperTestFragment(), SwiperTestFragment.TAG)
-                            .addToBackStack(SwiperTestFragment.TAG).commit();
                 }
             }
         };
@@ -180,11 +161,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         m_btnCustomFlow = (Button) findViewById(R.id.button_custom_flow);
         m_btnCustomFlow.setOnClickListener(mOnClickListener);
 
-        m_btnIntegratedFlow = (Button) findViewById(R.id.button_integrated_flow);
-        m_btnIntegratedFlow.setOnClickListener(mOnClickListener);
 
-        m_btnShowActivityWithFragment = (Button) findViewById(R.id.button_show_activity_with_fragment);
-        m_btnShowActivityWithFragment.setOnClickListener(mOnClickListener);
+        m_btnSwiperInitilization = (Button) findViewById(R.id.button_swiper_initialization);
+        m_btnSwiperInitilization.setOnClickListener(mOnClickListener);
 
         m_txtvVersion = (TextView)findViewById(R.id.activity_main_txtvVersion);
         m_txtvVersion.setText("v" + BuildConfig.VERSION_NAME);
@@ -237,6 +216,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     public void startCustomFlowActivity() {
+        CustomFlowActivity.mCallbackContext = mCallbackContext;
         Intent intent = new Intent(this, CustomFlowActivity.class);
         intent.putExtra("MAC", SwiperControllerManager.getInstance().getMACAddr());
         startActivity(intent);
@@ -360,7 +340,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void updateDeviceButtonTitle() {
-        m_btnSelectDevice.setText("Current Device (" + SwiperControllerManager.getInstance().getSwiperType() + ")");
+        if(!TextUtils.isEmpty(SwiperControllerManager.getInstance().getMACAddr())) {
+            Log.d("MacAddr ", SwiperControllerManager.getInstance().getMACAddr());
+            m_btnSelectDevice.setText("Current Device (" + SwiperControllerManager.getInstance().getSwiperType() + ")");
+        }
+        else m_btnSelectDevice.setText("Select Device ");
     }
 
     private Boolean checkPermission() {
@@ -377,8 +361,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onTokenGenerated(CCConsumerAccount accountToken) {
-        //PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, token);
-
         JSONObject responseJObject = new JSONObject();
         Gson gson = new Gson();
         try {
@@ -389,15 +371,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        //MainApp.getInstance().getCallbackContext().success(responseJObject.toString());
         PluginResult result = new PluginResult(PluginResult.Status.OK,responseJObject.toString());
         result.setKeepCallback(true);
-        Log.d("mCallbackContext Id ", mCallbackContext.getCallbackId());  //mCallbackContext Id: cardconnectplugin142239256  cardconnectplugin142239256
+        //Log.d("mCallbackContext Id ", mCallbackContext.getCallbackId());
         mCallbackContext.sendPluginResult(result);
     }
 
     @Override
-    public void onError(String errorMessage) {  //cardconnectplugin1748868259  cardconnectplugin1748868259
+    public void onError(String errorMessage) {
         JSONObject responseJObject = new JSONObject();
         try {
             responseJObject.put("message", errorMessage);
@@ -407,9 +388,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        mCallbackContext.error(responseJObject.toString());
+        PluginResult result = new PluginResult(PluginResult.Status.ERROR,responseJObject.toString());
+        result.setKeepCallback(true);
+        mCallbackContext.sendPluginResult(result);
     }
-
 
     public void closePaymentView(){
         CCConsumer.getInstance().getApi().removeBluetoothListener();

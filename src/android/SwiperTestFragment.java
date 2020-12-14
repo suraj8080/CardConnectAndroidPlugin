@@ -2,7 +2,6 @@ package cordova.plugin.cardconnectplugin.cardconnectplugin;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,18 +13,14 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-
-import com.bolt.consumersdk.CCConsumer;
 import com.bolt.consumersdk.domain.CCConsumerAccount;
 import com.bolt.consumersdk.domain.CCConsumerError;
 import com.bolt.consumersdk.swiper.CCSwiperController;
 import com.bolt.consumersdk.swiper.SwiperControllerListener;
 import com.bolt.consumersdk.swiper.enums.BatteryState;
-import com.bolt.consumersdk.swiper.enums.SwiperCaptureMode;
 import com.bolt.consumersdk.swiper.enums.SwiperError;
 import com.evontech.cardconnectdemo.R;
 
@@ -50,22 +45,17 @@ public class SwiperTestFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_swiper_test, container, false);
-
         Activity activity = getActivity();
         try {
             tokenListner = (TokenListner)activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement onSomeEventListener");
         }
-
         setupListeners();
-
         mConnectionStateTextView = (TextView) v.findViewById(R.id.text_view_connection);
         mConnectionStateTextView.setText("Attempting to Connect .");
-
         mSwitchSwipeOrTap = (Switch) v.findViewById(R.id.fragment_swiper_test_switchSwipeORTap);
         mSwitchSwipeOrTap.setOnCheckedChangeListener(mOnCheckedChangeListener);
-
         requestRecordAudioPermission();
         updateConnectionProgress();
 
@@ -100,9 +90,8 @@ public class SwiperTestFragment extends BaseFragment {
                         Log.d(TAG, "onTokenGenerated");
                         dismissProgressDialog();
                         if (error == null) {
-                            Log.d(TAG, "Token Generated");
                             showSnackBarMessage("Token Generated: " + account.getToken());
-                            mConnectionStateTextView.setText(mConnectionStateTextView.getText() + "\r\n" + "Token Generated: " + account.getToken());
+                            mConnectionStateTextView.setText(mConnectionStateTextView.getText() + "\r\n" + "Token Generated: ");
                             tokenListner.onTokenGenerated(account);
                         } else {
                             showErrorDialog(error.getResponseMessage());
@@ -143,11 +132,10 @@ public class SwiperTestFragment extends BaseFragment {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            updateSwitchText();
+                            //updateSwitchText();
                             resetSwiper();
                         }
                     }, 2000);
-
                     mSwitchSwipeOrTap.setEnabled(true);
                     }catch (Exception e){
                         e.printStackTrace();
@@ -275,6 +263,7 @@ public class SwiperTestFragment extends BaseFragment {
     }
 
     private void resetSwiper() {
+        if(((CCSwiperController) SwiperControllerManager.getInstance().getSwiperController())!=null)
         ((CCSwiperController) SwiperControllerManager.getInstance().getSwiperController()).startReaders(SwiperControllerManager.getInstance().getSwiperCaptureMode());
     }
 
@@ -330,10 +319,10 @@ public class SwiperTestFragment extends BaseFragment {
             switch (SwiperControllerManager.getInstance().getSwiperType()) {
                 case BBPosDevice:
                     Log.d("Type ", "BBPosDevice");
-                    mSwitchSwipeOrTap.setVisibility(View.GONE);
+                   // mSwitchSwipeOrTap.setVisibility(View.GONE);
                     break;
                 case IDTech:
-                    mSwitchSwipeOrTap.setVisibility(View.VISIBLE);
+                    //mSwitchSwipeOrTap.setVisibility(View.VISIBLE);
                     Log.d("Type ", "IDTech");
                     break;
             }

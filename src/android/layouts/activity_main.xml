@@ -4,28 +4,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     tools:context="cordova.plugin.cardconnectplugin.cardconnectplugin.MainActivity">
 
     <!--<include layout="@layout/app_bar_container" />-->
 
     <ImageView
         android:layout_margin="15dp"
-        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
         android:id="@+id/btn_close"
         android:padding="5dp"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:tint="@android:color/black"
-        android:src="@android:drawable/ic_menu_close_clear_cancel"/>
+        android:src="@drawable/ic_baseline_arrow_back_24"/>
 
     <Button
-        android:layout_marginTop="30dp"
+        android:layout_below="@+id/btn_close"
         android:id="@+id/activity_main_btnSelectDevice"
         style="?attr/borderlessButtonStyle"
         android:layout_width="@dimen/width_example_button"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:background="@color/colorAccent"
+        android:background="@drawable/button_background_rounded_corner"
         android:text="@string/select_device"
         android:textAllCaps="false"
         android:textColor="@android:color/white" />
@@ -37,14 +38,28 @@
         android:layout_width="@dimen/width_example_button"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:background="@color/colorAccent"
+        android:background="@drawable/button_background_rounded_corner"
         android:layout_marginTop="@dimen/margin_medium"
         android:text="@string/custom_flow"
         android:textAllCaps="false"
         android:textColor="@android:color/white" />
 
-    <FrameLayout
+    <Button
         android:layout_below="@+id/button_custom_flow"
+        android:id="@+id/button_swiper_initialization"
+        style="?attr/borderlessButtonStyle"
+        android:layout_width="@dimen/width_example_button"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/button_background_rounded_corner"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:text="@string/swiper_initialization"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white" />
+
+    <FrameLayout
+        android:background="@android:color/white"
+        android:layout_below="@+id/button_swiper_initialization"
         android:id="@+id/frame_layout_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

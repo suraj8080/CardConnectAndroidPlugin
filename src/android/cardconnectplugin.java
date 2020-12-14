@@ -1,17 +1,14 @@
 package cordova.plugin.cardconnectplugin.cardconnectplugin;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.bolt.consumersdk.CCConsumer;
 import com.bolt.consumersdk.CCConsumerTokenCallback;
 import com.bolt.consumersdk.domain.CCConsumerAccount;
 import com.bolt.consumersdk.domain.CCConsumerCardInfo;
 import com.bolt.consumersdk.domain.CCConsumerError;
 import com.bolt.consumersdk.swiper.SwiperControllerListener;
-import com.evontech.cardconnectdemo.R;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
@@ -33,9 +30,8 @@ public class cardconnectplugin extends CordovaPlugin {
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-        MainApp.getInstance().setCallbackContext(callbackContext);
         mCallbackContext = callbackContext;
-        Log.d("callbackContext ",  "  "+MainApp.getInstance().getCallbackContext());
+        //Log.d("callbackContext ",  "  "+mCallbackContext);
         if (action.equals("actionInitliseMannualPayment")) {
             String tokensiseUrl = args.getString(0);
 		    String  cardNumber = args.getString(1);
@@ -52,14 +48,13 @@ public class cardconnectplugin extends CordovaPlugin {
              MainApp.getConsumerApi().setEndPoint(tokensiseUrl);
              Intent intent = new Intent("cordova.plugin.cardconnectplugin.cardconnectplugin.MainActivity");
              intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-             //cordova.startActivityForResult((CordovaPlugin) cardconnectplugin.this, intent, 105);
              cordova.getActivity().startActivity(intent);
 
             // Send no result, to execute the callbacks later
             PluginResult pluginResult = new  PluginResult(PluginResult.Status.NO_RESULT);
             pluginResult.setKeepCallback(true); // Keep callback
             return true;
-        } else if (action.equals("closePluginView")) {
+        } else if (action.equals("actionClosePaymentView")) {
             try {
                 Activity activity = this.cordova.getActivity();
                 activity.finish();

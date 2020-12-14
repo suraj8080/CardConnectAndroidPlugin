@@ -7,19 +7,17 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import com.bolt.consumersdk.CCConsumerTokenCallback;
 import com.bolt.consumersdk.domain.CCConsumerAccount;
 import com.bolt.consumersdk.domain.CCConsumerCardInfo;
 import com.bolt.consumersdk.domain.CCConsumerError;
 import com.bolt.consumersdk.enums.CCConsumerMaskFormat;
 import com.bolt.consumersdk.swiper.SwiperControllerListener;
-
 import com.bolt.consumersdk.views.CCConsumerCreditCardNumberEditText;
 import com.bolt.consumersdk.views.CCConsumerCvvEditText;
 import com.bolt.consumersdk.views.CCConsumerExpirationDateEditText;
@@ -27,6 +25,10 @@ import com.bolt.consumersdk.views.CCConsumerUiTextChangeListener;
 import com.evontech.cardconnectdemo.R;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
+import org.apache.cordova.CallbackContext;
+import org.apache.cordova.PluginResult;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class CustomFlowActivity extends BaseActivity {
     private static final String TAG = CustomFlowActivity.class.getName();
@@ -39,6 +41,7 @@ public class CustomFlowActivity extends BaseActivity {
     private CCConsumerCardInfo mCCConsumerCardInfo;
     private TextView mConnectionStatus;
     private SwiperControllerListener mSwiperControllerListener = null;
+    public static CallbackContext mCallbackContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +51,7 @@ public class CustomFlowActivity extends BaseActivity {
         setupToolBar();
         setupListeners();
         mCardNumberEditText = (CCConsumerCreditCardNumberEditText)findViewById(R.id.text_edit_credit_card_number);
+        mCardNumberEditText.setCCConsumerMaskFormat(CCConsumerMaskFormat.FIRST_LAST_FOUR);
         mExpirationDateEditText =
                 (CCConsumerExpirationDateEditText)findViewById(R.id.text_edit_credit_card_expiration_date);
         mCvvEditText = (CCConsumerCvvEditText)findViewById(R.id.text_edit_credit_card_cvv);
@@ -92,7 +96,15 @@ public class CustomFlowActivity extends BaseActivity {
             }
         });
 
-        setupTabMaskOptions();
+        ImageView btn_close = (ImageView) findViewById(R.id.btn_close);
+        btn_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        //setupTabMaskOptions();
         // Request android permissions for Swiper
         requestRecordAudioPermission();
     }
@@ -155,7 +167,7 @@ public class CustomFlowActivity extends BaseActivity {
 
         showProgressDialog();
 
-        MainApp.getConsumerApi().setEndPoint("https://fts.cardconnect.com:6443");
+        //MainApp.getConsumerApi().setEndPoint("https://fts.cardconnect.com:6443");
         MainApp.getConsumerApi().generateAccountForCard(mCCConsumerCardInfo, new CCConsumerTokenCallback() {
             @Override
             public void onCCConsumerTokenResponseError(CCConsumerError error) {
@@ -171,6 +183,21 @@ public class CustomFlowActivity extends BaseActivity {
                 mCvvEditText.getText().clear();
                 mExpirationDateEditText.getText().clear();
                 mPostalCodeEditText.getText().clear();
+
+                JSONObject responseJObject = new JSONObject();
+                //Gson gson = new Gson();
+                try {
+                    //String tokenObject = gson.toJson(accountToken);
+                    responseJObject.put("message", "No error");
+                    responseJObject.put("errorcode", 0);
+                    responseJObject.put("token", consumerAccount.getToken());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                PluginResult result = new PluginResult(PluginResult.Status.OK,responseJObject.toString());
+                result.setKeepCallback(true);
+                //Log.d("mCallbackContext Id ", mCallbackContext.getCallbackId());
+                mCallbackContext.sendPluginResult(result);
             }
         });
     }
@@ -198,3 +225,4 @@ public class CustomFlowActivity extends BaseActivity {
         }
     }
 }
+

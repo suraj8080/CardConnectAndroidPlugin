@@ -1,22 +1,22 @@
 package cordova.plugin.cardconnectplugin.cardconnectplugin;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
-
 import com.evontech.cardconnectdemo.R;
 import com.google.android.material.snackbar.Snackbar;
 
 
 public abstract class BaseActivity extends AppCompatActivity {
-    AlertDialog dialogRemoveCard = null;
+    AlertDialog mDialog = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,18 +89,36 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void showRemoveCardDialog() {
-        if (dialogRemoveCard == null) {
-            dialogRemoveCard = new AlertDialog.Builder(this).setTitle("Please Remove Card").setMessage("Please Remove Card")
+        Log.d("showRemoveCardDialog", "called");
+        if (mDialog == null) {
+            mDialog = new AlertDialog.Builder(this).setTitle("Please Remove Card").setMessage("Please Remove Card")
                     .setCancelable(false)
                     .create();
-            dialogRemoveCard.show();
+            mDialog.show();
+        }
+    }
+
+    public void showSelectDeviceTypeDialog() {
+        if (mDialog == null) {
+            mDialog = new AlertDialog.Builder(this).setTitle("Please Select Device ").setMessage("Select device to connect.")
+                    .setCancelable(false)
+                    .setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mDialog.dismiss();
+                            mDialog = null;
+                        }
+                    })
+                    .create();
+            mDialog.show();
         }
     }
 
     public void hideRemoveCardDialog() {
-        if (dialogRemoveCard != null) {
-            dialogRemoveCard.dismiss();
-            dialogRemoveCard = null;
+        if (mDialog != null) {
+            mDialog.dismiss();
+            mDialog = null;
         }
     }
 }
+

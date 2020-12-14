@@ -9,7 +9,19 @@
 
 <!--    <include layout="@layout/app_bar_container" />-->
 
+    <ImageView
+        android:layout_margin="15dp"
+        android:layout_alignParentStart="true"
+        android:id="@+id/btn_close"
+        android:padding="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:tint="@android:color/black"
+        android:src="@drawable/ic_baseline_arrow_back_24"/>
+
+
     <com.google.android.material.tabs.TabLayout
+        android:visibility="gone"
         android:id="@+id/tab_layout_mask_options"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,10 +43,11 @@
     </com.google.android.material.tabs.TabLayout>
 
     <LinearLayout
+        android:layout_marginTop="100dp"
+        android:layout_below="@+id/btn_close"
         android:id="@+id/layout_credit_card_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
         android:orientation="vertical"
         android:paddingBottom="@dimen/padding_top_bottom_credit_info"
         android:paddingLeft="@dimen/padding_left_right_credit_info"
@@ -75,12 +88,14 @@
         </LinearLayout>
 
         <TextView
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_xx_large"
             android:gravity="center"
             android:text="@string/swiper_connection_status" />
         <TextView
+            android:visibility="gone"
             android:id="@+id/text_view_connection_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -99,7 +114,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/margin_medium"
         android:width="@dimen/width_example_button"
-        android:background="@color/colorAccent"
+        android:background="@drawable/button_background_rounded_corner"
         android:onClick="generateToken"
         android:paddingBottom="@dimen/padding_large"
         android:paddingTop="@dimen/padding_large"
@@ -108,3 +123,4 @@
         android:textColor="@android:color/white" />
 
 </RelativeLayout>
+

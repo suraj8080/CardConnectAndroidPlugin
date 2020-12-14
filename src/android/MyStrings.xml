@@ -1,9 +1,9 @@
 <resources>
-    <string name="custom_flow">Custom flow</string>
+    <string name="custom_flow">Mannual Payment</string>
     <string name="enter_card_number">Card Number</string>
     <string name="enter_cvv">CVV</string>
     <string name="mm_yy">MM/YY</string>
-    <string name="generate_token">Generate Token</string>
+    <string name="generate_token">Make Payment</string>
     <string name="error">Error</string>
     <string name="token_generated_format">Token Generated: %1$s</string>
     <string name="card_not_valid">Card number not valid!</string>
@@ -26,7 +26,7 @@
         Token: %2$s
     </string>
     <string name="show_activity_with_dynamic_fragment">Activity with dynamic fragment</string>
-    <string name="swiper_initialization">Swiper Initialization</string>
+    <string name="swiper_initialization">Make Machine Payment</string>
     <string name="activity_s_fragment">Activity\'s fragment</string>
     <string name="activity_example_with_fragment">Example Activity with Fragment</string>
     <string name="show_fragment_by_action">Show Fragment by Action</string>
@@ -40,3 +40,4 @@
     <string name="cardconnect_uat_post_url">https://fts.cardconnect.com</string>
 
 </resources>
+

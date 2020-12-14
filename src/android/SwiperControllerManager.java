@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
-
 import com.bolt.consumersdk.CCConsumer;
 import com.bolt.consumersdk.domain.CCConsumerAccount;
 import com.bolt.consumersdk.domain.CCConsumerError;
@@ -16,7 +15,6 @@ import com.bolt.consumersdk.swiper.enums.SwiperCaptureMode;
 import com.bolt.consumersdk.swiper.enums.SwiperError;
 import com.bolt.consumersdk.swiper.enums.SwiperType;
 import com.evontech.cardconnectdemo.R;
-
 import static com.bolt.consumersdk.swiper.enums.SwiperType.BBPosDevice;
 import static com.bolt.consumersdk.swiper.enums.SwiperType.IDTech;
 
@@ -239,6 +237,7 @@ public class SwiperControllerManager {
             mSwiperController.release();
             //mSwiperController.cancelTransaction();
             mSwiperController = null;
+            bConnected = false;
         }
     }
 
