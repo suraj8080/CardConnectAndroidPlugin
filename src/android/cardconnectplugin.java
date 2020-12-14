@@ -27,10 +27,12 @@ public class cardconnectplugin extends CordovaPlugin {
     private SwiperControllerListener mSwiperControllerListener = null;
     private String accountToken;
     private String errorMessage;
+    private Activity parentActivity;
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         mCallbackContext = callbackContext;
+        parentActivity = this.cordova.getActivity();
         //Log.d("callbackContext ",  "  "+mCallbackContext);
         if (action.equals("actionInitliseMannualPayment")) {
             String tokensiseUrl = args.getString(0);
@@ -46,9 +48,10 @@ public class cardconnectplugin extends CordovaPlugin {
         } else if(action.equals("actionInitliseCardPayment")) {
              String tokensiseUrl = args.getString(0);
              MainApp.getConsumerApi().setEndPoint(tokensiseUrl);
-             Intent intent = new Intent("cordova.plugin.cardconnectplugin.cardconnectplugin.MainActivity");
-             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-             cordova.getActivity().startActivity(intent);
+             //Intent intent = new Intent("cordova.plugin.cardconnectplugin.cardconnectplugin.MainActivity");
+             Intent intent = new Intent(parentActivity, MainActivity.class);
+             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+             parentActivity.startActivity(intent);
 
             // Send no result, to execute the callbacks later
             PluginResult pluginResult = new  PluginResult(PluginResult.Status.NO_RESULT);
@@ -56,8 +59,7 @@ public class cardconnectplugin extends CordovaPlugin {
             return true;
         } else if (action.equals("actionClosePaymentView")) {
             try {
-                Activity activity = this.cordova.getActivity();
-                activity.finish();
+                parentActivity.finish();
                 callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, 0));
             } catch (Exception e) {
                 callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, 1));
@@ -104,6 +106,7 @@ public class cardconnectplugin extends CordovaPlugin {
         }
     }
 }
+
 
 
 
