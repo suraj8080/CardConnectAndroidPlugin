@@ -156,7 +156,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private void setupViews() {
         m_btnSelectDevice = (Button) findViewById(R.id.activity_main_btnSelectDevice);
         m_btnSelectDevice.setOnClickListener(mOnClickListener);
-        updateDeviceButtonTitle();
 
         m_btnCustomFlow = (Button) findViewById(R.id.button_custom_flow);
         m_btnCustomFlow.setOnClickListener(mOnClickListener);
@@ -167,6 +166,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         m_txtvVersion = (TextView)findViewById(R.id.activity_main_txtvVersion);
         m_txtvVersion.setText("v" + BuildConfig.VERSION_NAME);
+
+        updateDeviceButtonTitle();
     }
 
     private void showSelectDeviceDialog() {
@@ -299,6 +300,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 }
             }
         };
+
+        updateDeviceButtonTitle();
     }
 
     @Override
@@ -343,8 +346,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         if(!TextUtils.isEmpty(SwiperControllerManager.getInstance().getMACAddr())) {
             Log.d("MacAddr ", SwiperControllerManager.getInstance().getMACAddr());
             m_btnSelectDevice.setText("Current Device (" + SwiperControllerManager.getInstance().getSwiperType() + ")");
+            m_btnSwiperInitilization.setVisibility(View.VISIBLE);
         }
-        else m_btnSelectDevice.setText("Select Device ");
+        else {
+            m_btnSelectDevice.setText("Select Device ");
+            m_btnSwiperInitilization.setVisibility(View.GONE);
+        }
     }
 
     private Boolean checkPermission() {
@@ -414,6 +421,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         Log.d("onBack", "pressed");
         finish();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        closePaymentView();
+    }
 }
+
 
 

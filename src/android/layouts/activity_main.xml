@@ -45,6 +45,7 @@
         android:textColor="@android:color/white" />
 
     <Button
+ 	android:visibility="gone"
         android:layout_below="@+id/button_custom_flow"
         android:id="@+id/button_swiper_initialization"
         style="?attr/borderlessButtonStyle"
