@@ -46,16 +46,20 @@ public class cardconnectplugin extends CordovaPlugin {
             });
             return true;
         } else if(action.equals("actionInitliseCardPayment")) {
-             String tokensiseUrl = args.getString(0);
-             MainApp.getConsumerApi().setEndPoint(tokensiseUrl);
-             //Intent intent = new Intent("cordova.plugin.cardconnectplugin.cardconnectplugin.MainActivity");
-             Intent intent = new Intent(parentActivity, MainActivity.class);
-             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-             parentActivity.startActivity(intent);
-
-            // Send no result, to execute the callbacks later
-            PluginResult pluginResult = new  PluginResult(PluginResult.Status.NO_RESULT);
-            pluginResult.setKeepCallback(true); // Keep callback
+            String tokensiseUrl = args.getString(0);
+            MainApp.getConsumerApi().setEndPoint(tokensiseUrl);
+            cordova.getThreadPool().execute(new Runnable() {
+                @Override
+                public void run() {
+                    //Intent intent = new Intent("cordova.plugin.cardconnectplugin.cardconnectplugin.MainActivity");
+                    Intent intent = new Intent(parentActivity.getBaseContext(), MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    parentActivity.startActivity(intent);
+                    // Send no result, to execute the callbacks later
+                    PluginResult pluginResult = new  PluginResult(PluginResult.Status.NO_RESULT);
+                    pluginResult.setKeepCallback(true); // Keep callback
+                }
+            });
             return true;
         } else if (action.equals("actionClosePaymentView")) {
             try {
