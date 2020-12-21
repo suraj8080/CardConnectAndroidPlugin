@@ -2,14 +2,11 @@ package cordova.plugin.cardconnectplugin.cardconnectplugin;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.util.Log;
-
 import com.bolt.consumersdk.CCConsumerTokenCallback;
 import com.bolt.consumersdk.domain.CCConsumerAccount;
 import com.bolt.consumersdk.domain.CCConsumerCardInfo;
 import com.bolt.consumersdk.domain.CCConsumerError;
 import com.bolt.consumersdk.swiper.SwiperControllerListener;
-
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.PluginResult;
@@ -62,15 +59,26 @@ public class cardconnectplugin extends CordovaPlugin {
             });
             return true;
         } else if (action.equals("actionClosePaymentView")) {
-            try {
-                parentActivity.finish();
-                callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, 0));
-            } catch (Exception e) {
-                callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, 1));
-            }
+            //Log.d("actionClosePaymentView ", "called");
+            cordova.getThreadPool().execute(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, 0));
+                        if(parentActivity.getCurrentFocus()!=null)
+                            parentActivity.getCurrentFocus().clearFocus();
+                        parentActivity.finishAndRemoveTask();
+                    } catch (Exception e) {
+                          if(parentActivity.getCurrentFocus()!=null)
+                              parentActivity.getCurrentFocus().clearFocus();
+                          callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, 1));
+                          parentActivity.finishAndRemoveTask();
+                    }
+                }
+            });
+
             return true;
         }
-
         return false;
     }
 
@@ -87,7 +95,7 @@ public class cardconnectplugin extends CordovaPlugin {
             @Override
             public void onCCConsumerTokenResponseError(CCConsumerError error) {
                 errorMessage = error.getResponseMessage();
-                Log.d("accountToken ", errorMessage);
+                //Log.d("accountToken ", errorMessage);
 		  responseInitlisePayment("Error in Generate token "+errorMessage, callbackContext);
             }
 
@@ -95,7 +103,7 @@ public class cardconnectplugin extends CordovaPlugin {
             public void onCCConsumerTokenResponse(CCConsumerAccount consumerAccount) {
                 //dismissProgressDialog();
                 accountToken = consumerAccount.getToken();
-                Log.d("accountToken ", accountToken);
+                //Log.d("accountToken ", accountToken);
 		    responseInitlisePayment("Account token is "+accountToken, callbackContext);
 		
             }

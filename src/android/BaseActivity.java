@@ -120,5 +120,26 @@ public abstract class BaseActivity extends AppCompatActivity {
             mDialog = null;
         }
     }
+
+    @Override
+    protected void onPause() {
+       // Log.d("BaseActivity ", "onPause: ");
+        if (mDialog != null) {
+            mDialog.dismiss();
+            mDialog = null;
+        }
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+       // Log.d("BaseActivity ", "onDestroy: ");
+        if (mDialog != null) {
+            mDialog.dismiss();
+            mDialog = null;
+        }
+        super.onDestroy();
+    }
 }
+
 

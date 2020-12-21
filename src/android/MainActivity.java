@@ -1,6 +1,7 @@
 package cordova.plugin.cardconnectplugin.cardconnectplugin;
 
 import android.Manifest;
+
 import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -66,11 +67,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Sentry.captureMessage("testing SDK setup");
             setContentView(R.layout.activity_main);
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-            //setupToolBar();
             setupListeners();
             setupViews();
 
@@ -281,12 +280,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             @Override
             public void onDeviceFound(BluetoothDevice device) {
                 synchronized (mapDevices) {
-
-
                     mapDevices.put(device.getAddress(), device);
-
                     deviceListAdapter.clear();
-
                     for (BluetoothDevice dev : mapDevices.values()) {
                         if (TextUtils.isEmpty(dev.getName())) {
                             deviceListAdapter.add(dev.getAddress());
@@ -294,9 +289,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                             deviceListAdapter.add(dev.getName());
                         }
                     }
-
                     deviceListAdapter.notifyDataSetChanged();
-
                 }
             }
         };
@@ -307,7 +300,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     protected void onPause() {
         CCConsumer.getInstance().getApi().removeBluetoothListener();
-
         super.onPause();
     }
 
@@ -369,7 +361,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onTokenGenerated(CCConsumerAccount accountToken) {
         JSONObject responseJObject = new JSONObject();
-        Gson gson = new Gson();
+        //Gson gson = new Gson();
         try {
             //String tokenObject = gson.toJson(accountToken);
             responseJObject.put("message", "No error");
@@ -404,8 +396,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         CCConsumer.getInstance().getApi().removeBluetoothListener();
         SwiperControllerManager.getInstance().disconnectFromDevice();
         mBluetoothSearchResponseListener = null;
-        setResult(RESULT_OK, null);
-        finish();
+        try {
+            if(getParent()!=null && getParent().getCurrentFocus()!=null)
+                getParent().getCurrentFocus().clearFocus();
+            finishAndRemoveTask();
+        }catch (Exception e){
+            finishAndRemoveTask();
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -418,14 +417,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     public void onBackPressed() {
         closePaymentView();
-        Log.d("onBack", "pressed");
-        finish();
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         closePaymentView();
+        super.onDestroy();
     }
 }
 

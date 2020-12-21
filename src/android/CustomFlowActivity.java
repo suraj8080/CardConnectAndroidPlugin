@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -151,7 +152,6 @@ public class CustomFlowActivity extends BaseActivity {
     }
 
     public void generateToken(View view) {
-
         // If using Custom UI Card object needs to be populated from within the component.
         mCardNumberEditText.setCardNumberOnCardInfo(mCCConsumerCardInfo);
         mExpirationDateEditText.setExpirationDateOnCardInfo(mCCConsumerCardInfo);
@@ -159,20 +159,29 @@ public class CustomFlowActivity extends BaseActivity {
         if (!TextUtils.isEmpty(mPostalCodeEditText.getText())) {
             mCCConsumerCardInfo.setPostalCode(mPostalCodeEditText.getText().toString());
         }
-
         if (!mCCConsumerCardInfo.isCardValid()) {
             showErrorDialog(getString(R.string.card_invalid));
             return;
         }
-
         showProgressDialog();
-
         //MainApp.getConsumerApi().setEndPoint("https://fts.cardconnect.com:6443");
         MainApp.getConsumerApi().generateAccountForCard(mCCConsumerCardInfo, new CCConsumerTokenCallback() {
             @Override
             public void onCCConsumerTokenResponseError(CCConsumerError error) {
                 dismissProgressDialog();
                 showErrorDialog(error.getResponseMessage());
+                JSONObject responseJObject = new JSONObject();
+                try {
+                    responseJObject.put("message", error.getResponseMessage());
+                    responseJObject.put("errorcode", 1);
+                    responseJObject.put("token", null);
+                    //Log.d("responseJObject ", responseJObject.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                PluginResult result = new PluginResult(PluginResult.Status.ERROR,responseJObject.toString());
+                result.setKeepCallback(true);
+                mCallbackContext.sendPluginResult(result);
             }
 
             @Override
@@ -225,4 +234,5 @@ public class CustomFlowActivity extends BaseActivity {
         }
     }
 }
+
 
