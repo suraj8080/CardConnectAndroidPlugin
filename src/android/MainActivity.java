@@ -1,7 +1,6 @@
 package cordova.plugin.cardconnectplugin.cardconnectplugin;
 
 import android.Manifest;
-
 import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -28,16 +27,10 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import com.bolt.ccconsumersdk.BuildConfig;
 import com.bolt.consumersdk.CCConsumer;
-import com.bolt.consumersdk.androidpay.CCConsumerAndroidPayActivity;
-import com.bolt.consumersdk.androidpay.CCConsumerAndroidPayConfiguration;
 import com.bolt.consumersdk.domain.CCConsumerAccount;
-import com.bolt.consumersdk.domain.response.CCConsumerApiAndroidPayTokenResponse;
 import com.bolt.consumersdk.listeners.BluetoothSearchResponseListener;
 import com.bolt.consumersdk.network.CCConsumerApi;
 import com.bolt.consumersdk.swiper.enums.SwiperType;
-import com.bolt.consumersdk.views.payment.accounts.PaymentAccountsActivity;
-import com.evontech.cardconnectdemo.R;
-import com.google.gson.Gson;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.PluginResult;
 import org.json.JSONException;
@@ -45,7 +38,8 @@ import org.json.JSONObject;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
+
+import io.ionic.starter.R;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener, SwiperTestFragment.TokenListner {
     private int REQUEST_PERMISSIONS = 1000;
@@ -63,17 +57,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private BluetoothSearchResponseListener mBluetoothSearchResponseListener = null;
     private AlertDialog alertDialog = null;
     public static CallbackContext mCallbackContext;
+    private String package_name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_main);
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
+        setContentView(getResourceId("activity_main", "layout"));
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             setupListeners();
             setupViews();
+            ImageView btn_close = (ImageView) findViewById(getResourceId("btn_close", "id"));
 
-            ImageView btn_close = (ImageView) findViewById(R.id.btn_close);
             btn_close.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -88,6 +82,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
+
                     case R.id.activity_main_btnSelectDevice:
                         showSelectDeviceDialog();
                         break;
@@ -110,7 +105,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 CCConsumerApi api = CCConsumer.getInstance().getApi();
 
-                if (parent.getId() == R.id.dialog_select_device_lvDeviceType) {
+                if (parent.getId() == getResourceId("dialog_select_device_lvDeviceType","id")) {
                     switch (SwiperType.values()[position]) {
                         case BBPosDevice:
                             SwiperControllerManager.getInstance().setSwiperType(SwiperType.BBPosDevice);
@@ -343,6 +338,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         result.setKeepCallback(true);
         //Log.d("mCallbackContext Id ", mCallbackContext.getCallbackId());
         mCallbackContext.sendPluginResult(result);
+        closePaymentView();
     }
 
     @Override
@@ -395,6 +391,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
 }
+
 
 
 
