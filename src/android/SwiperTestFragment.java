@@ -90,7 +90,7 @@ public class SwiperTestFragment extends BaseFragment {
                         Log.d(TAG, "onTokenGenerated");
                         dismissProgressDialog();
                         if (error == null) {
-                            showSnackBarMessage("Token Generated: " + account.getToken());
+                            //showSnackBarMessage("Token Generated: " + account.getToken());
                             mConnectionStateTextView.setText(mConnectionStateTextView.getText() + "\r\n" + "Token Generated: ");
                             tokenListner.onTokenGenerated(account);
                         } else {

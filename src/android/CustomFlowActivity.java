@@ -187,7 +187,7 @@ public class CustomFlowActivity extends BaseActivity {
             @Override
             public void onCCConsumerTokenResponse(CCConsumerAccount consumerAccount) {
                 dismissProgressDialog();
-                showSnackBarMessage(consumerAccount.getToken());
+                //showSnackBarMessage(consumerAccount.getToken());
                 mCardNumberEditText.getText().clear();
                 mCvvEditText.getText().clear();
                 mExpirationDateEditText.getText().clear();
@@ -200,6 +200,7 @@ public class CustomFlowActivity extends BaseActivity {
                     responseJObject.put("message", "No error");
                     responseJObject.put("errorcode", 0);
                     responseJObject.put("token", consumerAccount.getToken());
+                    responseJObject.put("expirationDate", consumerAccount.getExpirationDate());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -207,6 +208,8 @@ public class CustomFlowActivity extends BaseActivity {
                 result.setKeepCallback(true);
                 //Log.d("mCallbackContext Id ", mCallbackContext.getCallbackId());
                 mCallbackContext.sendPluginResult(result);
+                finish();
+                setResult(RESULT_OK);
             }
         });
     }

@@ -219,22 +219,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         CustomFlowActivity.mCallbackContext = mCallbackContext;
         Intent intent = new Intent(this, CustomFlowActivity.class);
         intent.putExtra("MAC", SwiperControllerManager.getInstance().getMACAddr());
-        startActivity(intent);
-    }
-
-    public void startIntegratedFlowActivity() {
-        ApiBridgeImpl apiBridgeImpl = new ApiBridgeImpl();
-        Intent intent = new Intent(this, PaymentAccountsActivity.class);
-        intent.putExtra("MAC", SwiperControllerManager.getInstance().getMACAddr());
-        intent.putExtra(PaymentAccountsActivity.API_BRIDGE_IMPL_KEY, apiBridgeImpl);
-
-        // Android Pay Integration
-        CCConsumerAndroidPayConfiguration.getInstance().setAndroidPayUiEnabled(true);
-        CCConsumerAndroidPayConfiguration.getInstance().setMerchantName("Merchant Test Name");
-        CCConsumerAndroidPayConfiguration.getInstance().setMerchantTransactionId(UUID.randomUUID().toString());
-        intent.putExtra(CCConsumerAndroidPayActivity.ANDROID_PAY_TOTAL_AMOUNT_KEY, "5.00");
-
-        startActivityForResult(intent, PaymentAccountsActivity.PAYMENT_ACTIVITY_REQUEST_CODE);
+        startActivityForResult(intent,111);
     }
 
     @Override
@@ -243,33 +228,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.button_custom_flow:
                 startCustomFlowActivity();
                 break;
-            case R.id.button_integrated_flow:
-                startIntegratedFlowActivity();
-                break;
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // Get Account selected by integrated UI flow
-        if (requestCode == PaymentAccountsActivity.PAYMENT_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-
-            // Check for Android Pay selected Payment
-            if (data.hasExtra(PaymentAccountsActivity.ANDROID_PAY_TOKEN_RESPONSE_KEY)) {
-                CCConsumerApiAndroidPayTokenResponse response =
-                        data.getParcelableExtra(PaymentAccountsActivity.ANDROID_PAY_TOKEN_RESPONSE_KEY);
-                Toast.makeText(this, getString(R.string.selected_android_pay_account_text_format,
-                        response.getGoogleTransactionId(), response.getToken()), Toast.LENGTH_SHORT).show();
-            } else {
-                // Example of displaying account selected
-                CCConsumerAccount selectedAccount =
-                        data.getParcelableExtra(PaymentAccountsActivity.PAYMENT_ACTIVITY_ACCOUNT_SELECTED);
-                Toast.makeText(this, getString(R.string.selected_account_text_format, selectedAccount.getAccountType()
-                        .toString(), selectedAccount.getLast4()), Toast.LENGTH_SHORT).show();
-            }
+        Log.d("requestCode "+requestCode, "resultCode "+resultCode);
+        if (requestCode == 111 ) {
+            closePaymentView();
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -336,7 +304,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private void updateDeviceButtonTitle() {
         if(!TextUtils.isEmpty(SwiperControllerManager.getInstance().getMACAddr())) {
-            Log.d("MacAddr ", SwiperControllerManager.getInstance().getMACAddr());
+            //Log.d("MacAddr ", SwiperControllerManager.getInstance().getMACAddr());
             m_btnSelectDevice.setText("Current Device (" + SwiperControllerManager.getInstance().getSwiperType() + ")");
             m_btnSwiperInitilization.setVisibility(View.VISIBLE);
         }
@@ -367,6 +335,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             responseJObject.put("message", "No error");
             responseJObject.put("errorcode", 0);
             responseJObject.put("token", accountToken.getToken());
+            responseJObject.put("expirationDate", accountToken.getExpirationDate());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -383,7 +352,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             responseJObject.put("message", errorMessage);
             responseJObject.put("errorcode", 1);
             responseJObject.put("token", null);
-            Log.d("responseJObject ", responseJObject.toString());
+            //Log.d("responseJObject ", responseJObject.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -393,6 +362,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     public void closePaymentView(){
+        Log.d("closePaymentView ", "Called");
         CCConsumer.getInstance().getApi().removeBluetoothListener();
         SwiperControllerManager.getInstance().disconnectFromDevice();
         mBluetoothSearchResponseListener = null;
@@ -404,7 +374,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             finishAndRemoveTask();
             e.printStackTrace();
         }
-
     }
 
     @Override
@@ -424,6 +393,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         closePaymentView();
         super.onDestroy();
     }
+
 }
 
 
