@@ -3,6 +3,7 @@ package cordova.plugin.cardconnectplugin.cardconnectplugin;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
-import com.evontech.cardconnectdemo.R;
+import io.ionic.starter.R;
 import com.google.android.material.snackbar.Snackbar;
 
 
@@ -140,6 +141,18 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         super.onDestroy();
     }
+
+
+    //getResources().getIdentifier("btn_close", "id", package_name);  // String in strings.xml or an identifier of a UI element
+    //getResources().getIdentifier("activity_main", "layout", package_name); // for layout id
+    //getResources().getIdentifier("nameOfDrawable", "drawable", this.getPackageName()); //for drawable id
+    public static int resId;
+    public int getResourceId(String resourceName, String resourceType){
+        String package_name = getApplication().getPackageName();
+        resId = getResources().getIdentifier(resourceName, resourceType, package_name);
+        return resId;
+    }
 }
+
 
 
