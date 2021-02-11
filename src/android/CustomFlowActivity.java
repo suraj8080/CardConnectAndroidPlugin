@@ -4,15 +4,16 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
 import com.bolt.consumersdk.CCConsumerTokenCallback;
 import com.bolt.consumersdk.domain.CCConsumerAccount;
 import com.bolt.consumersdk.domain.CCConsumerCardInfo;
@@ -23,9 +24,9 @@ import com.bolt.consumersdk.views.CCConsumerCreditCardNumberEditText;
 import com.bolt.consumersdk.views.CCConsumerCvvEditText;
 import com.bolt.consumersdk.views.CCConsumerExpirationDateEditText;
 import com.bolt.consumersdk.views.CCConsumerUiTextChangeListener;
-import com.evontech.cardconnectdemo.R;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
+
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.PluginResult;
 import org.json.JSONException;
@@ -47,17 +48,17 @@ public class CustomFlowActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_custom_flow);
+        setContentView(getResourceId("activity_custom_flow", "layout"));
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setupToolBar();
         setupListeners();
-        mCardNumberEditText = (CCConsumerCreditCardNumberEditText)findViewById(R.id.text_edit_credit_card_number);
+        mCardNumberEditText = (CCConsumerCreditCardNumberEditText)findViewById(getResourceId("text_edit_credit_card_number","id"));
         mCardNumberEditText.setCCConsumerMaskFormat(CCConsumerMaskFormat.FIRST_LAST_FOUR);
         mExpirationDateEditText =
-                (CCConsumerExpirationDateEditText)findViewById(R.id.text_edit_credit_card_expiration_date);
-        mCvvEditText = (CCConsumerCvvEditText)findViewById(R.id.text_edit_credit_card_cvv);
-        mPostalCodeEditText = (EditText)findViewById(R.id.text_edit_credit_card_postal_code);
-        mConnectionStatus = (TextView)findViewById(R.id.text_view_connection_status);
+                (CCConsumerExpirationDateEditText)findViewById(getResourceId("text_edit_credit_card_expiration_date","id"));
+        mCvvEditText = (CCConsumerCvvEditText)findViewById(getResourceId("text_edit_credit_card_cvv", "id"));
+        mPostalCodeEditText = (EditText)findViewById(getResourceId("text_edit_credit_card_postal_code", "id"));
+        mConnectionStatus = (TextView)findViewById(getResourceId("text_view_connection_status","id"));
         mCCConsumerCardInfo = new CCConsumerCardInfo();
         mCardNumberEditText.setCreditCardTextChangeListener(
                 new CCConsumerUiTextChangeListener() {
@@ -65,7 +66,7 @@ public class CustomFlowActivity extends BaseActivity {
                     public void onTextChanged() {
                         // This callback will be used for displaying custom UI showing validation completion
                         if (!mCardNumberEditText.isCardNumberValid() && mCardNumberEditText.getText().length() != 0) {
-                            mCardNumberEditText.setError(getString(R.string.card_not_valid));
+                            mCardNumberEditText.setError(getString(getResourceId("card_not_valid", "string")));
                         } else {
                             mCardNumberEditText.setError(null);
                         }
@@ -78,7 +79,7 @@ public class CustomFlowActivity extends BaseActivity {
                 // This callback will be used for displaying custom UI showing validation completion
                 if (!mExpirationDateEditText.isExpirationDateValid() &&
                         mExpirationDateEditText.getText().length() != 0) {
-                    mExpirationDateEditText.setError(getString(R.string.date_not_valid));
+                    mExpirationDateEditText.setError(getString(getResourceId("date_not_valid", "string")));
                 } else {
                     mExpirationDateEditText.setError(null);
                 }
@@ -90,14 +91,14 @@ public class CustomFlowActivity extends BaseActivity {
             public void onTextChanged() {
                 // This callback will be used for displaying custom UI showing validation completion
                 if (!mCvvEditText.isCvvCodeValid() && mCvvEditText.getText().length() != 0) {
-                    mCvvEditText.setError(getString(R.string.cvv_not_valid));
+                    mCvvEditText.setError(getString(getResourceId("cvv_not_valid", "string")));
                 } else {
                     mCvvEditText.setError(null);
                 }
             }
         });
 
-        ImageView btn_close = (ImageView) findViewById(R.id.btn_close);
+        ImageView btn_close = (ImageView) findViewById(getResourceId("btn_close","id"));
         btn_close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,7 +116,7 @@ public class CustomFlowActivity extends BaseActivity {
     }
 
     private void setupTabMaskOptions() {
-        TabLayout maskOptionsTabLayout = (TabLayout)findViewById(R.id.tab_layout_mask_options);
+        TabLayout maskOptionsTabLayout = (TabLayout)findViewById(getResourceId("tab_layout_mask_options", "id"));
         maskOptionsTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -160,7 +161,7 @@ public class CustomFlowActivity extends BaseActivity {
             mCCConsumerCardInfo.setPostalCode(mPostalCodeEditText.getText().toString());
         }
         if (!mCCConsumerCardInfo.isCardValid()) {
-            showErrorDialog(getString(R.string.card_invalid));
+            showErrorDialog(getString(getResourceId("card_invalid", "string")));
             return;
         }
         showProgressDialog();
@@ -215,7 +216,7 @@ public class CustomFlowActivity extends BaseActivity {
     }
 
     private void showSnackBarMessage(String message) {
-        Snackbar.make(findViewById(android.R.id.content), getString(R.string.token_generated_format,
+        Snackbar.make(findViewById(android.R.id.content), getString(getResourceId("token_generated_format","string"),
                 message), Snackbar.LENGTH_SHORT).show();
     }
 

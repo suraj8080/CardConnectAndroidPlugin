@@ -1,6 +1,7 @@
 package cordova.plugin.cardconnectplugin.cardconnectplugin;
 
 import android.app.Activity;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -34,5 +35,14 @@ public abstract class BaseFragment extends Fragment {
         if (activity instanceof BaseActivity) {
             ((BaseActivity)activity).dismissProgressDialog();
         }
+    }
+
+    public static int resId;
+    public int getResourceId(String resourceName, String resourceType){
+        // eg: getResources().getIdentifier("com.my.app:drawable/my_image", null, null); // another way
+        String package_name = getContext().getPackageName();
+        //Log.d("package_name ", package_name);
+        resId = getResources().getIdentifier(resourceName, resourceType, package_name);
+        return resId;
     }
 }

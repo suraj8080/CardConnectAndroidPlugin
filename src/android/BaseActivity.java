@@ -3,16 +3,16 @@ package cordova.plugin.cardconnectplugin.cardconnectplugin;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
-import io.ionic.starter.R;
+
 import com.google.android.material.snackbar.Snackbar;
 
 
@@ -22,7 +22,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (this instanceof CustomFlowActivity && getResources().getBoolean(R.bool.is_phone)) {
+        //if (this instanceof CustomFlowActivity && getResources().getBoolean(R.bool.is_phone)) {
+        if (this instanceof CustomFlowActivity && getResources().getBoolean(getResourceId("is_phone","bool"))) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
     }
@@ -36,7 +37,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected void setupToolBar() {
-        Toolbar toolbar = (Toolbar)findViewById(R.id.tool_bar);
+        //Toolbar toolbar = (Toolbar)findViewById(R.id.tool_bar);
+        Toolbar toolbar = (Toolbar)findViewById(getResourceId("tool_bar","id"));
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             if (!(this instanceof MainActivity) && getSupportActionBar() != null) {
@@ -61,13 +63,14 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected void showErrorDialog(@NonNull String errorMessage) {
-        new AlertDialog.Builder(this).setTitle(getString(R.string.error)).setMessage(errorMessage)
+        new AlertDialog.Builder(this).setTitle(getString(getResourceId("error", "string"))).setMessage(errorMessage)  //R.string.error
                 .setNeutralButton(android.R.string.ok, null)
                 .show();
     }
 
     private void setChangeUrlAction() {
-        TextView changeUrlTextView = (TextView)findViewById(R.id.text_view_change_url);
+        //TextView changeUrlTextView = (TextView)findViewById(R.id.text_view_change_url);
+        TextView changeUrlTextView = (TextView)findViewById(getResourceId("text_view_change_url", "id"));
         if (changeUrlTextView != null) {
             changeUrlTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -143,16 +146,17 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
-    //getResources().getIdentifier("btn_close", "id", package_name);  // String in strings.xml or an identifier of a UI element
-    //getResources().getIdentifier("activity_main", "layout", package_name); // for layout id
-    //getResources().getIdentifier("nameOfDrawable", "drawable", this.getPackageName()); //for drawable id
+    /*getResources().getIdentifier("btn_close", "id", package_name);  // String in strings.xml or an identifier of a UI element
+    getResources().getIdentifier("activity_main", "layout", package_name); // for layout id
+    getResources().getIdentifier("nameOfDrawable", "drawable", this.getPackageName()); //for drawable id*/
     public static int resId;
     public int getResourceId(String resourceName, String resourceType){
+        // eg: getResources().getIdentifier("com.my.app:drawable/my_image", null, null); // another way
         String package_name = getApplication().getPackageName();
+        //Log.d("package_name ", package_name);
         resId = getResources().getIdentifier(resourceName, resourceType, package_name);
         return resId;
     }
 }
-
 
 

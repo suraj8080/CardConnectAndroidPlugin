@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -12,7 +13,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.bolt.consumersdk.CCConsumer;
-import com.evontech.cardconnectdemo.R;
 
 public class UrlFragmentDialog extends DialogFragment {
     public final static String TAG = UrlFragmentDialog.class.getName();
@@ -32,8 +32,8 @@ public class UrlFragmentDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        View dialogView = View.inflate(getActivity(), R.layout.dialog_url, null);
-        final EditText urlEditText = (EditText)dialogView.findViewById(R.id.edit_text_url);
+        View dialogView = View.inflate(getActivity(), getResourceId("dialog_url", "layout"), null);
+        final EditText urlEditText = (EditText)dialogView.findViewById(getResourceId("edit_text_url","id"));
         urlEditText.setText(CCConsumer.getInstance().getApi().getEndPoint());
 
         return new AlertDialog.Builder(getActivity()).setView(dialogView).setPositiveButton(android.R.string.ok,
@@ -49,5 +49,14 @@ public class UrlFragmentDialog extends DialogFragment {
                 dismiss();
             }
         }).show();
+    }
+
+    public static int resId;
+    public int getResourceId(String resourceName, String resourceType){
+        // eg: getResources().getIdentifier("com.my.app:drawable/my_image", null, null); // another way
+        String package_name = getContext().getPackageName();
+        Log.d("package_name ", package_name);
+        resId = getResources().getIdentifier(resourceName, resourceType, package_name);
+        return resId;
     }
 }

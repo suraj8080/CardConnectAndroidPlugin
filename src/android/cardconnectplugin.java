@@ -2,11 +2,13 @@ package cordova.plugin.cardconnectplugin.cardconnectplugin;
 
 import android.app.Activity;
 import android.content.Intent;
+
 import com.bolt.consumersdk.CCConsumerTokenCallback;
 import com.bolt.consumersdk.domain.CCConsumerAccount;
 import com.bolt.consumersdk.domain.CCConsumerCardInfo;
 import com.bolt.consumersdk.domain.CCConsumerError;
 import com.bolt.consumersdk.swiper.SwiperControllerListener;
+
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.PluginResult;

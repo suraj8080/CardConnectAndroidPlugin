@@ -13,16 +13,17 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+
 import com.bolt.consumersdk.domain.CCConsumerAccount;
 import com.bolt.consumersdk.domain.CCConsumerError;
 import com.bolt.consumersdk.swiper.CCSwiperController;
 import com.bolt.consumersdk.swiper.SwiperControllerListener;
 import com.bolt.consumersdk.swiper.enums.BatteryState;
 import com.bolt.consumersdk.swiper.enums.SwiperError;
-import com.evontech.cardconnectdemo.R;
 
 public class SwiperTestFragment extends BaseFragment {
     public static final String TAG = SwiperTestFragment.class.getSimpleName();
@@ -44,7 +45,7 @@ public class SwiperTestFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_swiper_test, container, false);
+        View v = inflater.inflate(getResourceId("fragment_swiper_test", "layout"), container, false);
         Activity activity = getActivity();
         try {
             tokenListner = (TokenListner)activity;
@@ -52,9 +53,9 @@ public class SwiperTestFragment extends BaseFragment {
             throw new ClassCastException(activity.toString() + " must implement onSomeEventListener");
         }
         setupListeners();
-        mConnectionStateTextView = (TextView) v.findViewById(R.id.text_view_connection);
+        mConnectionStateTextView = (TextView) v.findViewById(getResourceId("text_view_connection", "id"));
         mConnectionStateTextView.setText("Attempting to Connect .");
-        mSwitchSwipeOrTap = (Switch) v.findViewById(R.id.fragment_swiper_test_switchSwipeORTap);
+        mSwitchSwipeOrTap = (Switch) v.findViewById(getResourceId("fragment_swiper_test_switchSwipeORTap", "id"));
         mSwitchSwipeOrTap.setOnCheckedChangeListener(mOnCheckedChangeListener);
         requestRecordAudioPermission();
         updateConnectionProgress();
@@ -116,7 +117,7 @@ public class SwiperTestFragment extends BaseFragment {
                     try {
                     Log.d(TAG, "Swiper ready for card");
                     if (getActivity() != null)
-                        showSnackBarMessage(getString(R.string.ready_for_swipe));
+                        showSnackBarMessage(getString(getResourceId("ready_for_swipe", "string")));
                     }catch (Exception e){
                         e.printStackTrace();
                     }
@@ -126,7 +127,7 @@ public class SwiperTestFragment extends BaseFragment {
                 public void onSwiperConnected() {
                     try {
                     Log.d(TAG, "Swiper connected");
-                    mConnectionStateTextView.setText(R.string.connected);
+                    mConnectionStateTextView.setText(getResourceId("connected", "string"));
                     bConnected = true;
 
                     new Handler().postDelayed(new Runnable() {
@@ -146,7 +147,7 @@ public class SwiperTestFragment extends BaseFragment {
                 public void onSwiperDisconnected() {
                     try {
                     Log.d(TAG, "Swiper disconnected");
-                    mConnectionStateTextView.setText(R.string.disconnected);
+                    mConnectionStateTextView.setText(getResourceId("disconnected", "string"));
                     }catch (Exception e){
                         e.printStackTrace();
                     }
@@ -191,6 +192,7 @@ public class SwiperTestFragment extends BaseFragment {
 
                 @Override
                 public void onDeviceConfigurationUpdate(String s) {
+
                 }
 
                 @Override

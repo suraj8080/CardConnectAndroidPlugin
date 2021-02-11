@@ -1,6 +1,7 @@
 package cordova.plugin.cardconnectplugin.cardconnectplugin;
 
 import android.app.Application;
+
 import com.bolt.consumersdk.CCConsumer;
 import com.bolt.consumersdk.network.CCConsumerApi;
 import com.bolt.consumersdk.swiper.enums.SwiperType;

@@ -21,25 +21,27 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
 import com.bolt.ccconsumersdk.BuildConfig;
 import com.bolt.consumersdk.CCConsumer;
 import com.bolt.consumersdk.domain.CCConsumerAccount;
 import com.bolt.consumersdk.listeners.BluetoothSearchResponseListener;
 import com.bolt.consumersdk.network.CCConsumerApi;
 import com.bolt.consumersdk.swiper.enums.SwiperType;
+
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.PluginResult;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import io.ionic.starter.R;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener, SwiperTestFragment.TokenListner {
     private int REQUEST_PERMISSIONS = 1000;
@@ -81,8 +83,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch (v.getId()) {
+                if(v.getId()==getResourceId("activity_main_btnSelectDevice", "id")){
+                    showSelectDeviceDialog();
+                }else if(v.getId()==getResourceId("button_custom_flow", "id")){
+                    startCustomFlowActivity();
+                }else if(v.getId()==getResourceId("button_swiper_initialization", "id")){
+                    if(!TextUtils.isEmpty(SwiperControllerManager.getInstance().getMACAddr())) {
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(getResourceId("frame_layout_container","id"), new SwiperTestFragment(), SwiperTestFragment.TAG)
+                                .addToBackStack(SwiperTestFragment.TAG).commit();
+                    }else showSelectDeviceTypeDialog();
+                }
 
+                /*switch (v.getId()) {
                     case R.id.activity_main_btnSelectDevice:
                         showSelectDeviceDialog();
                         break;
@@ -92,11 +105,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     case R.id.button_swiper_initialization:
                         if(!TextUtils.isEmpty(SwiperControllerManager.getInstance().getMACAddr())) {
                             getSupportFragmentManager().beginTransaction()
-                                    .replace(R.id.frame_layout_container, new SwiperTestFragment(), SwiperTestFragment.TAG)
+                                    .replace(getResourceId("frame_layout_container","id"), new SwiperTestFragment(), SwiperTestFragment.TAG)
                                     .addToBackStack(SwiperTestFragment.TAG).commit();
                         }else showSelectDeviceTypeDialog();
                         break;
-                }
+                }*/
             }
         };
 
@@ -125,7 +138,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                             }, 35000);
                             break;
                     }
-                } else if (parent.getId() == R.id.dialog_select_device_lvDevicesFound) {
+                } else if (parent.getId() == getResourceId("dialog_select_device_lvDevicesFound", "id")) {
                     String str = deviceListAdapter.getItem(position);
                     BluetoothDevice ble = mapDevices.get(str);
 
@@ -148,17 +161,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void setupViews() {
-        m_btnSelectDevice = (Button) findViewById(R.id.activity_main_btnSelectDevice);
+        m_btnSelectDevice = (Button) findViewById(getResourceId("activity_main_btnSelectDevice", "id"));
         m_btnSelectDevice.setOnClickListener(mOnClickListener);
 
-        m_btnCustomFlow = (Button) findViewById(R.id.button_custom_flow);
+        m_btnCustomFlow = (Button) findViewById(getResourceId("button_custom_flow", "id"));
         m_btnCustomFlow.setOnClickListener(mOnClickListener);
 
 
-        m_btnSwiperInitilization = (Button) findViewById(R.id.button_swiper_initialization);
+        m_btnSwiperInitilization = (Button) findViewById(getResourceId("button_swiper_initialization", "id"));
         m_btnSwiperInitilization.setOnClickListener(mOnClickListener);
 
-        m_txtvVersion = (TextView)findViewById(R.id.activity_main_txtvVersion);
+        m_txtvVersion = (TextView)findViewById(getResourceId("activity_main_txtvVersion", "id"));
         m_txtvVersion.setText("v" + BuildConfig.VERSION_NAME);
 
         updateDeviceButtonTitle();
@@ -193,17 +206,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         });
 
         inflater = getLayoutInflater();
-        view = inflater.inflate(R.layout.dialog_select_device, null);
+        view = inflater.inflate(getResourceId("dialog_select_device", "layout"), null);
 
-        listView = view.findViewById(R.id.dialog_select_device_lvDeviceType);
+        listView = view.findViewById(getResourceId("dialog_select_device_lvDeviceType", "id"));
         listView.setAdapter(arrayAdapter);
         listView.setOnItemClickListener(mOnItemClickListener);
 
-        deviceListView = view.findViewById(R.id.dialog_select_device_lvDevicesFound);
+        deviceListView = view.findViewById(getResourceId("dialog_select_device_lvDevicesFound", "id"));
         deviceListView.setAdapter(deviceListAdapter);
         deviceListView.setOnItemClickListener(mOnItemClickListener);
 
-        m_llSearching = (LinearLayout) view.findViewById(R.id.dialog_select_device_llSearching);
+        m_llSearching = (LinearLayout) view.findViewById(getResourceId("dialog_select_device_llSearching", "id"));
         m_llSearching.setVisibility(View.INVISIBLE);
 
         dialogBuilder.setView(view);
@@ -219,11 +232,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
+        final int customFlowView = getResourceId("button_custom_flow", "id");
+            if(v.getId() == customFlowView){
+                startCustomFlowActivity();
+            }
+            /*switch (v.getId()) {
             case R.id.button_custom_flow:
                 startCustomFlowActivity();
                 break;
-        }
+            }*/
     }
 
     @Override
@@ -391,7 +408,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
 }
-
 
 
 

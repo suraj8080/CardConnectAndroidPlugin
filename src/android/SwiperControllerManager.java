@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
-import com.bolt.consumersdk.CCConsumer;
+
 import com.bolt.consumersdk.domain.CCConsumerAccount;
 import com.bolt.consumersdk.domain.CCConsumerError;
 import com.bolt.consumersdk.swiper.CCSwiperControllerFactory;
@@ -14,7 +14,7 @@ import com.bolt.consumersdk.swiper.enums.BatteryState;
 import com.bolt.consumersdk.swiper.enums.SwiperCaptureMode;
 import com.bolt.consumersdk.swiper.enums.SwiperError;
 import com.bolt.consumersdk.swiper.enums.SwiperType;
-import com.evontech.cardconnectdemo.R;
+
 import static com.bolt.consumersdk.swiper.enums.SwiperType.BBPosDevice;
 import static com.bolt.consumersdk.swiper.enums.SwiperType.IDTech;
 
@@ -295,7 +295,7 @@ public class SwiperControllerManager {
     /**
      * Initial Configuration for Consumer Api
      */
-    private void setupConsumerApi() {
+    /*private void setupConsumerApi() {
         switch (cordova.plugin.cardconnectplugin.cardconnectplugin.SwiperControllerManager.getInstance().getSwiperType()) {
             case BBPosDevice:
                 //CCConsumer.getInstance().getApi().setEndPoint("https://fts-uat.cardconnect.com");
@@ -309,7 +309,7 @@ public class SwiperControllerManager {
                 break;
         }
         CCConsumer.getInstance().getApi().setDebugEnabled(true);
-    }
+    }*/
 }
 
 
