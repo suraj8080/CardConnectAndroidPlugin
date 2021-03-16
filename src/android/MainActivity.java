@@ -246,7 +246,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d("requestCode "+requestCode, "resultCode "+resultCode);
-        if (requestCode == 111 ) {
+        if (requestCode == 111 && data!=null) {
             closePaymentView();
         }
         super.onActivityResult(requestCode, resultCode, data);
