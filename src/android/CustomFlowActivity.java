@@ -209,8 +209,8 @@ public class CustomFlowActivity extends BaseActivity {
                 result.setKeepCallback(true);
                 //Log.d("mCallbackContext Id ", mCallbackContext.getCallbackId());
                 mCallbackContext.sendPluginResult(result);
-                finish();
                 setResult(RESULT_OK, new Intent());
+		finish();
             }
         });
     }
@@ -241,8 +241,8 @@ public class CustomFlowActivity extends BaseActivity {
 	@Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            finish();
             setResult(RESULT_CANCELED, null);
+	    finish();
         }
         return super.onKeyDown(keyCode, event);
     }	
